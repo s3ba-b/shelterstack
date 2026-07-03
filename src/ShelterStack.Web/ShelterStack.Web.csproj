@@ -12,7 +12,7 @@
       reflect the signed-in tenant/role/organization. The web app never validates or trusts
       the token for authorization — the Gateway APIs do that — it only decodes it for display.
     -->
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.1" />
   </ItemGroup>
 
   <ItemGroup>
