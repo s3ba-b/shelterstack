@@ -1,4 +1,6 @@
-﻿<aside class="sidebar">
+@inject IStringLocalizer<SharedStrings> L
+
+<aside class="sidebar">
     <div class="brand">
         <span class="brand-mark">
             <svg viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" /><path d="M9.5 21v-5a2.5 2.5 0 0 1 5 0v5" /></svg>
@@ -9,46 +11,46 @@
     @* The signed-in user's organization, named from the token's org_name claim. A single
        tenant per session in M1, so this is a label rather than a switcher for now. *@
     <AuthorizeView>
-        <div class="org disabled" title="Organization">
+        <div class="org disabled" title="@L["Shell_YourOrganization"]">
             <span class="org-logo">@Initials(OrgName(context.User))</span>
-            <span class="org-meta"><b>@OrgName(context.User)</b><span>Your organization</span></span>
+            <span class="org-meta"><b>@OrgName(context.User)</b><span>@L["Shell_YourOrganization"]</span></span>
         </div>
     </AuthorizeView>
 
     <nav class="nav">
         <NavLink class="nav-item" href="" Match="NavLinkMatch.All">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9" rx="1.5" /><rect x="14" y="3" width="7" height="5" rx="1.5" /><rect x="14" y="12" width="7" height="9" rx="1.5" /><rect x="3" y="16" width="7" height="5" rx="1.5" /></svg>
-            Overview
+            @L["Nav_Overview"]
         </NavLink>
 
-        <div class="nav-label">Operations</div>
+        <div class="nav-label">@L["Nav_Section_Operations"]</div>
         <NavLink class="nav-item" href="animals">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10 5.5C10 7 8.5 8.5 7 8.5S4 7 4 5.5 5.5 3 7 3s3 1 3 2.5Z" /><path d="M20 5.5C20 7 18.5 8.5 17 8.5S14 7 14 5.5 15.5 3 17 3s3 1 3 2.5Z" /><path d="M5 14c0-2 1.5-3.5 3.5-3.5h7c2 0 3.5 1.5 3.5 3.5 0 3-2 7-7 7s-7-4-7-7Z" /></svg>
-            Animals
+            @L["Nav_Animals"]
         </NavLink>
         @* Adoptions (M4), Foster homes (M4) and Medical (M5) are future milestones — shown for the
            established nav structure but not yet built. *@
         <span class="nav-item disabled" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M20.8 5.6a5 5 0 0 0-7.1 0l-1.7 1.7-1.7-1.7a5 5 0 1 0-7.1 7.1l8.8 8.8 8.8-8.8a5 5 0 0 0 0-7.1Z" /></svg>
-            Adoptions
+            @L["Nav_Adoptions"]
         </span>
         <span class="nav-item disabled" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" /><path d="M9.5 21v-5a2.5 2.5 0 0 1 5 0v5" /></svg>
-            Foster homes
+            @L["Nav_FosterHomes"]
         </span>
         <span class="nav-item disabled" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6v4h4v6h-4v4H9v-4H5V7h4Z" /></svg>
-            Medical
+            @L["Nav_Medical"]
         </span>
 
-        <div class="nav-label">Organization</div>
+        <div class="nav-label">@L["Nav_Section_Organization"]</div>
         <span class="nav-item disabled" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3.2" /><path d="M3.5 20a5.5 5.5 0 0 1 11 0" /><path d="M16 5.5a3 3 0 0 1 0 5.5M17.5 14.5a5.5 5.5 0 0 1 3 5" /></svg>
-            People &amp; roles
+            @L["Nav_PeopleAndRoles"]
         </span>
         <span class="nav-item disabled" aria-disabled="true">
             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3" /><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 1 1-2.83 2.83l-.06-.06a1.65 1.65 0 0 0-2.82 1.17V21a2 2 0 1 1-4 0v-.09A1.65 1.65 0 0 0 7.6 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 1 1-2.83-2.83l.06-.06a1.65 1.65 0 0 0 .33-2.82V14a2 2 0 1 1 0-4h.09A1.65 1.65 0 0 0 4.6 7.6a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 1 1 2.83-2.83l.06.06a1.65 1.65 0 0 0 1.82.33H9a2 2 0 1 1 4 0v.09a1.65 1.65 0 0 0 2.4.91" /></svg>
-            Settings
+            @L["Nav_Settings"]
         </span>
     </nav>
 
@@ -59,7 +61,7 @@
             <div class="user">
                 <span class="avatar">@Initials(Email(context.User))</span>
                 <span class="user-meta"><b>@Email(context.User)</b><span>@Role(context.User)</span></span>
-                <button class="icon-btn btn-signout" title="Sign out" aria-label="Sign out" @onclick="SignOut">
+                <button class="icon-btn btn-signout" title="@L["Shell_SignOut"]" aria-label="@L["Shell_SignOut"]" @onclick="SignOutAsync">
                     <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" /><path d="m16 17 5-5-5-5" /><path d="M21 12H9" /></svg>
                 </button>
             </div>
@@ -73,6 +75,9 @@
 
     [Inject]
     private NavigationManager Navigation { get; set; } = default!;
+
+    [Inject]
+    private IJSRuntime JS { get; set; } = default!;
 
     private static string OrgName(System.Security.Claims.ClaimsPrincipal user)
     {
@@ -102,8 +107,9 @@
         };
     }
 
-    private void SignOut()
+    private async Task SignOutAsync()
     {
+        await JS.InvokeVoidAsync("languageInterop.clearSession");
         Auth.SignOut();
         Navigation.NavigateTo("login");
     }

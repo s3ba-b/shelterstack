@@ -322,6 +322,19 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 .user .btn-signout { width: 30px; height: 30px; border-color: transparent; background: transparent; color: var(--muted-2); }
 .user .btn-signout:hover { background: var(--surface-3); color: var(--text-2); }
 
+/* Language toggle — topbar + login page */
+.lang-toggle {
+  display: grid; place-items: center; height: 30px; padding: 0 10px;
+  border-radius: 7px; border: 1px solid var(--border); background: var(--surface);
+  color: var(--muted); font-size: 0.72rem; font-weight: 700; letter-spacing: 0.04em;
+  cursor: pointer; transition: background .15s, color .15s;
+}
+.lang-toggle:hover { background: var(--surface-2); color: var(--text-2); }
+
+/* Auth form header: heading + language toggle side-by-side */
+.auth-form-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.auth-form-header h1 { margin: 0; font-size: 1.5rem; font-weight: 700; }
+
 /* =========================================================
    RESPONSIVE
    ========================================================= */

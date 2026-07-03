@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Localization;
 using ShelterStack.Web.Auth;
 using ShelterStack.Web.Components;
 
@@ -9,6 +10,7 @@ builder.AddServiceDefaults();
 
 // Add services to the container.
 builder.Services.AddRazorComponents().AddInteractiveServerComponents();
+builder.Services.AddLocalization();
 
 // Authenticated session (token + tenant/role/org claims) for the current circuit. The same
 // scoped instance backs Blazor's AuthenticationStateProvider so AuthorizeView/AuthorizeRouteView
@@ -39,6 +41,16 @@ if (!app.Environment.IsDevelopment())
 }
 app.UseStatusCodePagesWithReExecute("/not-found", createScopeForStatusCodePages: true);
 app.UseHttpsRedirection();
+
+// English is the default; Polish is opt-in via the EN/PL toggle (stored in a cookie).
+app.UseRequestLocalization(options =>
+{
+    options
+        .AddSupportedCultures("en", "pl")
+        .AddSupportedUICultures("en", "pl")
+        .SetDefaultCulture("en");
+    options.RequestCultureProviders.Insert(0, new CookieRequestCultureProvider());
+});
 
 app.UseAntiforgery();
 

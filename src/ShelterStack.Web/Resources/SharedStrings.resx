@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<root>
+  <xsd:schema id="root" xmlns="" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata">
+    <xsd:import namespace="http://www.w3.org/2001/XMLSchema" />
+    <xsd:element name="root" msdata:IsDataSet="true">
+      <xsd:complexType>
+        <xsd:choice maxOccurs="unbounded">
+          <xsd:element name="metadata">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="assembly">
+            <xsd:complexType>
+              <xsd:attribute name="alias" type="xsd:string" />
+              <xsd:attribute name="name" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="data">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+                <xsd:element name="comment" type="xsd:string" minOccurs="0" msdata:Ordinal="2" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+              <xsd:attribute name="type" type="xsd:string" />
+              <xsd:attribute name="mimetype" type="xsd:string" />
+              <xsd:attribute ref="xml:space" />
+            </xsd:complexType>
+          </xsd:element>
+          <xsd:element name="resheader">
+            <xsd:complexType>
+              <xsd:sequence>
+                <xsd:element name="value" type="xsd:string" minOccurs="0" msdata:Ordinal="1" />
+              </xsd:sequence>
+              <xsd:attribute name="name" use="required" type="xsd:string" />
+            </xsd:complexType>
+          </xsd:element>
+        </xsd:choice>
+      </xsd:complexType>
+    </xsd:element>
+  </xsd:schema>
+  <resheader name="resmimetype"><value>text/microsoft-resx</value></resheader>
+  <resheader name="version"><value>2.0</value></resheader>
+  <resheader name="reader"><value>System.Resources.ResXResourceReader, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+  <resheader name="writer"><value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value></resheader>
+
+  <!-- Navigation -->
+  <data name="Nav_Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Nav_Animals" xml:space="preserve"><value>Animals</value></data>
+  <data name="Nav_Adoptions" xml:space="preserve"><value>Adoptions</value></data>
+  <data name="Nav_FosterHomes" xml:space="preserve"><value>Foster homes</value></data>
+  <data name="Nav_Medical" xml:space="preserve"><value>Medical</value></data>
+  <data name="Nav_PeopleAndRoles" xml:space="preserve"><value>People &amp; roles</value></data>
+  <data name="Nav_Settings" xml:space="preserve"><value>Settings</value></data>
+  <data name="Nav_Section_Operations" xml:space="preserve"><value>Operations</value></data>
+  <data name="Nav_Section_Organization" xml:space="preserve"><value>Organization</value></data>
+
+  <!-- Shell / app chrome -->
+  <data name="Shell_YourOrganization" xml:space="preserve"><value>Your organization</value></data>
+  <data name="Shell_SignOut" xml:space="preserve"><value>Sign out</value></data>
+  <data name="Shell_SearchPlaceholder" xml:space="preserve"><value>Search animals, people, applications…</value></data>
+  <data name="Shell_PageTitle_Overview" xml:space="preserve"><value>Overview</value></data>
+  <data name="Shell_PageTitle_Animals" xml:space="preserve"><value>Animals</value></data>
+  <data name="Shell_SwitchLanguage" xml:space="preserve"><value>Switch language / Zmień język</value></data>
+
+  <!-- Login page -->
+  <data name="Login_PageTitle" xml:space="preserve"><value>Sign in · ShelterStack</value></data>
+  <data name="Login_StaffWorkspace" xml:space="preserve"><value>STAFF WORKSPACE</value></data>
+  <data name="Login_SideHeading" xml:space="preserve"><value>Manage your shelter, all in one place.</value></data>
+  <data name="Login_SideBody" xml:space="preserve"><value>Animals, adoptions, foster homes, and vet schedules — for your organization, kept private to your organization.</value></data>
+  <data name="Login_Point_IsolatedData" xml:space="preserve"><value>Your data is isolated from every other shelter</value></data>
+  <data name="Login_Point_Roles" xml:space="preserve"><value>Roles for admins, staff, and volunteers</value></data>
+  <data name="Login_Point_OpenSource" xml:space="preserve"><value>Free and open source, forever</value></data>
+  <data name="Login_Heading" xml:space="preserve"><value>Sign in</value></data>
+  <data name="Login_SubHeading" xml:space="preserve"><value>Welcome back. Enter your credentials to open your workspace.</value></data>
+  <data name="Login_EmailLabel" xml:space="preserve"><value>Email</value></data>
+  <data name="Login_PasswordLabel" xml:space="preserve"><value>Password</value></data>
+  <data name="Login_Submit" xml:space="preserve"><value>Sign in to workspace</value></data>
+  <data name="Login_SubmitBusy" xml:space="preserve"><value>Signing in…</value></data>
+  <data name="Login_Error_InvalidCredentials" xml:space="preserve"><value>We couldn't sign you in. Check your email and password and try again.</value></data>
+
+  <!-- Home page -->
+  <data name="Home_Heading" xml:space="preserve"><value>Welcome to ShelterStack</value></data>
+  <data name="Home_Body" xml:space="preserve"><value>The staff workspace for your shelter. From here you'll manage animal records, intake history, and status — all scoped to your organization.</value></data>
+  <data name="Home_ShellTitle" xml:space="preserve"><value>This is the application shell</value></data>
+  <data name="Home_ShellBody" xml:space="preserve"><value>Navigation, layout, and the shared Aspire wiring are in place. Sign-in and the Animals screens arrive in the next M3 increments.</value></data>
+
+  <!-- Animals page -->
+  <data name="Animals_Heading" xml:space="preserve"><value>Animals</value></data>
+  <data name="Animals_Body" xml:space="preserve"><value>Records, intake history, and status for your organization's animals.</value></data>
+  <data name="Animals_ComingSoonTitle" xml:space="preserve"><value>Coming in a later M3 increment</value></data>
+  <data name="Animals_ComingSoonBody" xml:space="preserve"><value>The list, detail, create, and edit screens against the live Gateway API land in #84. This placeholder confirms the shell's navigation is wired.</value></data>
+</root>
