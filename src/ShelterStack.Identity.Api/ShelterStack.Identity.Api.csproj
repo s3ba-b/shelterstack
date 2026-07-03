@@ -16,7 +16,7 @@
       so EF Core resolves ITenantContext from the correct per-request scope every time.
     -->
     <PackageReference Include="Aspire.Npgsql" Version="13.4.6" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.0" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.2" />
     <!-- Mints/signs the JWT access tokens the login endpoint returns (JwtTokenIssuer). -->
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.16.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.0">
