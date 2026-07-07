@@ -35,15 +35,27 @@ than scope creep.
 
 These are candidates surfaced by a competitive analysis against existing shelter-management
 software — not commitments, and not yet broken into milestones with a definition of done.
-Revisit once M7 lands:
+Revisit once M7 lands. The full analysis (market map, strategic gap, source links) is in
+[issue #112](https://github.com/s3ba-b/shelterstack/issues/112).
 
 - **Open, event-driven integrations** — per-tenant webhooks on domain events (e.g. "animal
   available"), plus connectors to push listings to external adoption portals and query/update
-  microchip registries.
+  microchip registries. EU/PL variant: exports to dlaschroniska.pl and the Safe-Animal microchip
+  registry.
 - **Offline-first staff web app** — the Blazor app (M3) working offline in low-signal kennel
   areas, syncing on reconnect, with a live, multi-user kennel status board (e.g. via SignalR).
 - **Capacity-for-care analytics** — operational KPIs (length of stay, live-release rate,
   capacity utilization) derived from the OpenTelemetry instrumentation already in place from M5.
+- **GDPR as a product feature** — surface the data-subject rights capabilities from M4/M5
+  (export, anonymisation, audit log) as a visible "data subject rights panel" for tenant admins,
+  plus a ready-made DPA template for operators. US competitors lack this; it is a concrete EU
+  purchasing argument.
+- **Polish statutory reporting (GIW / gminy)** — one-click generation of the statutory reports
+  that Polish shelters submit to municipalities and the Veterinary Inspectorate (GIW); decisive
+  for winning municipal contracts.
+- **Public adoption portal (M8 candidate)** — a read-only, per-tenant adoption listing page
+  (static or separately served). Deliberately excluded from v1; the single biggest gap vs.
+  eSCHRONISKO/PetNest for small foundations.
 
 ## How to start the next milestone
 
