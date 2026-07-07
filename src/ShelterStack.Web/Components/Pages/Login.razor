@@ -3,8 +3,10 @@
 @inject GatewayClient Gateway
 @inject WebAuthenticationStateProvider Auth
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedStrings> L
+@inject IJSRuntime JS
 
-<PageTitle>Sign in · ShelterStack</PageTitle>
+<PageTitle>@L["Login_PageTitle"]</PageTitle>
 
 <div class="auth">
     <aside class="auth-aside">
@@ -12,16 +14,16 @@
             <span class="brand-mark">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" /><path d="M9.5 21v-5a2.5 2.5 0 0 1 5 0v5" /></svg>
             </span>
-            <span class="brand-name">ShelterStack<small>STAFF WORKSPACE</small></span>
+            <span class="brand-name">ShelterStack<small>@L["Login_StaffWorkspace"]</small></span>
         </span>
 
         <div class="auth-aside-body">
-            <h2>Manage your shelter, all in one place.</h2>
-            <p>Animals, adoptions, foster homes, and vet schedules — for your organization, kept private to your organization.</p>
+            <h2>@L["Login_SideHeading"]</h2>
+            <p>@L["Login_SideBody"]</p>
             <ul class="auth-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> Your data is isolated from every other shelter</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> Roles for admins, staff, and volunteers</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> Free and open source, forever</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_IsolatedData"]</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_Roles"]</li>
+                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_OpenSource"]</li>
             </ul>
         </div>
 
@@ -32,8 +34,11 @@
         <EditForm class="auth-form" Model="_model" OnValidSubmit="SignInAsync">
             <DataAnnotationsValidator />
 
-            <h1>Sign in</h1>
-            <p class="sub">Welcome back. Enter your credentials to open your workspace.</p>
+            <div class="auth-form-header">
+                <h1>@L["Login_Heading"]</h1>
+                <LanguageToggle />
+            </div>
+            <p class="sub">@L["Login_SubHeading"]</p>
 
             @if (_error is not null)
             {
@@ -41,17 +46,17 @@
             }
 
             <div class="field">
-                <label for="email">Email</label>
+                <label for="email">@L["Login_EmailLabel"]</label>
                 <InputText id="email" @bind-Value="_model.Email" type="email" placeholder="you@shelter.org" autocomplete="username" />
             </div>
 
             <div class="field">
-                <label for="pw">Password</label>
+                <label for="pw">@L["Login_PasswordLabel"]</label>
                 <InputText id="pw" @bind-Value="_model.Password" type="password" autocomplete="current-password" />
             </div>
 
             <button class="btn btn-primary btn-block" type="submit" disabled="@_busy">
-                @(_busy ? "Signing in…" : "Sign in to workspace")
+                @(_busy ? L["Login_SubmitBusy"].Value : L["Login_Submit"].Value)
             </button>
 
             <p class="hint" style="margin-top:16px;text-align:center">
@@ -87,13 +92,15 @@
         var token = await Gateway.LoginAsync(_model.Email, _model.Password, CancellationToken.None);
         if (token is null)
         {
-            _error = "We couldn't sign you in. Check your email and password and try again.";
+            _error = L["Login_Error_InvalidCredentials"];
             _busy = false;
             return;
         }
 
         // Tenant/role/organization come from the token's claims; the email is carried for display.
         Auth.SignIn(token, _model.Email);
+        // Persist the token so the language toggle's forceLoad reload doesn't lose the session.
+        await JS.InvokeVoidAsync("languageInterop.saveSession", token, _model.Email);
         Navigation.NavigateTo(SafeReturnTarget(), replace: true);
     }
 

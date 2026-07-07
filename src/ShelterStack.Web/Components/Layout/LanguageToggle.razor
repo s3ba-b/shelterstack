@@ -1,0 +1,58 @@
+@inject IJSRuntime JS
+@inject NavigationManager Navigation
+@using System.Globalization
+
+<button class="lang-toggle" @onclick="ToggleAsync" title="@L["Shell_SwitchLanguage"]" aria-label="@L["Shell_SwitchLanguage"]">
+    @(IsPolish ? "EN" : "PL")
+</button>
+
+@code {
+    [Inject]
+    private IStringLocalizer<SharedStrings> L { get; set; } = default!;
+
+    [CascadingParameter]
+    private Task<AuthenticationState>? AuthState { get; set; }
+
+    private bool IsPolish => CultureInfo.CurrentUICulture.TwoLetterISOLanguageName == "pl";
+
+    // On first render, restore the per-user stored preference if it differs from the current
+    // culture cookie (e.g. signing in from a new session after having set Polish before).
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var email = await GetEmailAsync();
+        if (string.IsNullOrEmpty(email))
+            return;
+
+        var stored = await JS.InvokeAsync<string?>("languageInterop.getUserLanguage", email);
+        if (stored is not null && stored != CultureInfo.CurrentUICulture.TwoLetterISOLanguageName)
+        {
+            await JS.InvokeVoidAsync("languageInterop.setCultureCookie", stored);
+            Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+        }
+    }
+
+    private async Task ToggleAsync()
+    {
+        var next = IsPolish ? "en" : "pl";
+
+        var email = await GetEmailAsync();
+        if (!string.IsNullOrEmpty(email))
+        {
+            await JS.InvokeVoidAsync("languageInterop.setUserLanguage", email, next);
+        }
+
+        await JS.InvokeVoidAsync("languageInterop.setCultureCookie", next);
+        Navigation.NavigateTo(Navigation.Uri, forceLoad: true);
+    }
+
+    private async Task<string> GetEmailAsync()
+    {
+        if (AuthState is null)
+            return string.Empty;
+        var user = (await AuthState).User;
+        return user.FindFirst(TokenClaims.Email)?.Value ?? string.Empty;
+    }
+}

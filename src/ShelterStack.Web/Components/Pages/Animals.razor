@@ -1,18 +1,16 @@
-﻿@page "/animals"
+@page "/animals"
+@inject IStringLocalizer<SharedStrings> L
 
-<PageTitle>Animals · ShelterStack</PageTitle>
+<PageTitle>@L["Animals_Heading"] · ShelterStack</PageTitle>
 
 <div class="page-head">
     <div>
-        <h1>Animals</h1>
-        <p>Records, intake history, and status for your organization's animals.</p>
+        <h1>@L["Animals_Heading"]</h1>
+        <p>@L["Animals_Body"]</p>
     </div>
 </div>
 
 <div class="card section-card">
-    <h3>Coming in a later M3 increment</h3>
-    <p class="sub">
-        The list, detail, create, and edit screens against the live Gateway API land
-        in #84. This placeholder confirms the shell's navigation is wired.
-    </p>
+    <h3>@L["Animals_ComingSoonTitle"]</h3>
+    <p class="sub">@L["Animals_ComingSoonBody"]</p>
 </div>

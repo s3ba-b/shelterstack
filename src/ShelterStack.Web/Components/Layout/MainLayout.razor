@@ -1,5 +1,8 @@
-﻿@inherits LayoutComponentBase
+@inherits LayoutComponentBase
 @inject NavigationManager Navigation
+@inject IStringLocalizer<SharedStrings> L
+@inject IJSRuntime JS
+@inject WebAuthenticationStateProvider Auth
 
 @* Route guard: every page wrapped by this layout requires a signed-in session. An
    unauthenticated visitor is redirected to sign-in (with a return URL) and the shell is not
@@ -16,13 +19,12 @@
             </div>
             <div class="search">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
-                <input placeholder="Search animals, people, applications…" disabled />
+                <input placeholder="@L["Shell_SearchPlaceholder"]" disabled />
             </div>
-            @* Notification bell + the EN/PL toggle (#83) land here. The signed-in user and
-               sign-out control live in the sidebar foot (NavMenu), matching the design mock-up. *@
-            <button class="icon-btn" disabled>
+            <button class="icon-btn" disabled aria-label="Notifications">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
             </button>
+            <LanguageToggle />
         </header>
 
         <main class="content">
@@ -43,33 +45,68 @@
     private Task<AuthenticationState>? AuthState { get; set; }
 
     private bool _authenticated;
+    // True once OnAfterRenderAsync has run and we've had a chance to restore from sessionStorage.
+    // Until then we suppress the redirect so a language-toggle reload doesn't lose the session.
+    private bool _sessionChecked;
 
-    // Re-runs whenever the cascading auth state changes (sign-in/sign-out), so signing out from
-    // a protected page bounces straight to sign-in.
     protected override async Task OnParametersSetAsync()
     {
         if (AuthState is null)
-        {
             return;
-        }
 
         var user = (await AuthState).User;
         _authenticated = user.Identity?.IsAuthenticated == true;
 
-        if (!_authenticated)
+        if (!_authenticated && _sessionChecked)
         {
-            var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
-            var target = string.IsNullOrEmpty(returnUrl)
-                ? "login"
-                : $"login?returnUrl={Uri.EscapeDataString(returnUrl)}";
-            Navigation.NavigateTo(target, replace: true);
+            RedirectToLogin();
         }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        _sessionChecked = true;
+
+        if (_authenticated)
+            return;
+
+        // The circuit is fresh (e.g. after a language-toggle forceLoad reload). Try to restore
+        // the token that Login.razor saved to sessionStorage before the reload.
+        var session = await JS.InvokeAsync<SessionInfo?>("languageInterop.getSession");
+        if (session?.Token is not null && session.Email is not null)
+        {
+            Auth.SignIn(session.Token, session.Email);
+            // NotifyAuthenticationStateChanged triggers OnParametersSetAsync again with the
+            // restored user, so the shell renders without a redirect.
+        }
+        else
+        {
+            RedirectToLogin();
+        }
+    }
+
+    private void RedirectToLogin()
+    {
+        var returnUrl = Navigation.ToBaseRelativePath(Navigation.Uri);
+        var target = string.IsNullOrEmpty(returnUrl)
+            ? "login"
+            : $"login?returnUrl={Uri.EscapeDataString(returnUrl)}";
+        Navigation.NavigateTo(target, replace: true);
     }
 
     private string CurrentPageTitle =>
         Navigation.ToBaseRelativePath(Navigation.Uri).TrimEnd('/') switch
         {
-            "animals" => "Animals",
-            _ => "Overview",
+            "animals" => L["Shell_PageTitle_Animals"],
+            _ => L["Shell_PageTitle_Overview"],
         };
+
+    private sealed class SessionInfo
+    {
+        public string? Token { get; set; }
+        public string? Email { get; set; }
+    }
 }
