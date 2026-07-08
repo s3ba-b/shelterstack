@@ -1,0 +1,105 @@
+@inject IStringLocalizer<SharedStrings> L
+
+@* Shared create/edit form. Both pages own the Gateway call and role/error handling; this
+   component is only the fields, validation, and buttons so the two screens stay in step. *@
+<EditForm class="card form-card" Model="Model" OnSubmit="HandleSubmitAsync">
+    @if (ServerError is not null)
+    {
+        <div class="form-error" role="alert">@ServerError</div>
+    }
+
+    <div class="form-grid">
+        <div class="field full">
+            <label for="name">@L["AnimalForm_Name"]</label>
+            <InputText id="name" @bind-Value="Model.Name" placeholder="@L["AnimalForm_Name_Placeholder"]" autocomplete="off" />
+            @if (_nameError is not null)
+            {
+                <div class="validation-message">@_nameError</div>
+            }
+        </div>
+
+        <div class="field">
+            <label for="species">@L["AnimalForm_Species"]</label>
+            <InputSelect id="species" @bind-Value="Model.Species">
+                @foreach (var species in Enum.GetValues<AnimalSpecies>())
+                {
+                    <option value="@species">@AnimalDisplay.SpeciesLabel(L, species)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="field">
+            <label for="sex">@L["AnimalForm_Sex"]</label>
+            <InputSelect id="sex" @bind-Value="Model.Sex">
+                @foreach (var sex in Enum.GetValues<AnimalSex>())
+                {
+                    <option value="@sex">@AnimalDisplay.SexLabel(L, sex)</option>
+                }
+            </InputSelect>
+        </div>
+
+        <div class="field">
+            <label for="breed">@L["AnimalForm_Breed"]</label>
+            <InputText id="breed" @bind-Value="Model.Breed" placeholder="@L["AnimalForm_Breed_Placeholder"]" autocomplete="off" />
+        </div>
+
+        <div class="field">
+            <label for="dob">@L["AnimalForm_DateOfBirth"]</label>
+            <InputDate id="dob" @bind-Value="Model.DateOfBirth" max="@_today" />
+            <div class="hint">@L["AnimalForm_DateOfBirth_Hint"]</div>
+        </div>
+
+        <div class="field full">
+            <label for="description">@L["AnimalForm_Description"]</label>
+            <InputTextArea id="description" @bind-Value="Model.Description" placeholder="@L["AnimalForm_Description_Placeholder"]" />
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <a class="btn btn-ghost" href="@CancelHref">@L["AnimalForm_Cancel"]</a>
+        <button class="btn btn-primary" type="submit" disabled="@Busy">
+            @(Busy ? L["AnimalForm_Saving"].Value : SubmitLabel)
+        </button>
+    </div>
+</EditForm>
+
+@code {
+    // ISO date so the native date picker caps the selectable range at today — an animal can't
+    // have been born in the future.
+    private readonly string _today = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
+
+    [Parameter, EditorRequired]
+    public AnimalFormModel Model { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public string SubmitLabel { get; set; } = default!;
+
+    [Parameter, EditorRequired]
+    public string CancelHref { get; set; } = default!;
+
+    [Parameter]
+    public bool Busy { get; set; }
+
+    /// <summary>A server-side error to surface above the form (e.g. a 403 or a transient
+    /// failure), already localized by the owning page. Null when there is nothing to show.</summary>
+    [Parameter]
+    public string? ServerError { get; set; }
+
+    [Parameter]
+    public EventCallback OnValidSubmit { get; set; }
+
+    private string? _nameError;
+
+    // Name is the one required field the Animals API enforces; validating it here (rather than via
+    // a data-annotation attribute) keeps the message localized. Everything else is optional.
+    private async Task HandleSubmitAsync()
+    {
+        _nameError = string.IsNullOrWhiteSpace(Model.Name) ? L["AnimalForm_Required_Name"].Value : null;
+        if (_nameError is not null)
+        {
+            return;
+        }
+
+        await OnValidSubmit.InvokeAsync();
+    }
+}

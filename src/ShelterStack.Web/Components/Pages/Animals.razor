@@ -1,4 +1,6 @@
 @page "/animals"
+@inject GatewayClient Gateway
+@inject NavigationManager Navigation
 @inject IStringLocalizer<SharedStrings> L
 
 <PageTitle>@L["Animals_Heading"] · ShelterStack</PageTitle>
@@ -8,9 +10,165 @@
         <h1>@L["Animals_Heading"]</h1>
         <p>@L["Animals_Body"]</p>
     </div>
+    @if (_state == LoadState.Ready)
+    {
+        <AuthorizeView Roles="Admin,Staff">
+            <div class="actions">
+                <a class="btn btn-primary" href="animals/new">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M5 12h14" /></svg>
+                    @L["Animals_AddAnimal"]
+                </a>
+            </div>
+        </AuthorizeView>
+    }
 </div>
 
-<div class="card section-card">
-    <h3>@L["Animals_ComingSoonTitle"]</h3>
-    <p class="sub">@L["Animals_ComingSoonBody"]</p>
-</div>
+@if (_state == LoadState.Loading)
+{
+    <div class="card state-card">
+        <p class="muted">@L["Common_Loading"]</p>
+    </div>
+}
+else if (_state == LoadState.Forbidden)
+{
+    <div class="card state-card">
+        <div class="state-ico">🔒</div>
+        <h3>@L["Animals_Forbidden_Title"]</h3>
+        <p>@L["Animals_Forbidden_Body"]</p>
+    </div>
+}
+else if (_state == LoadState.Error)
+{
+    <div class="card state-card">
+        <div class="state-ico">⚠️</div>
+        <h3>@L["Animals_LoadError_Title"]</h3>
+        <p>@L["Animals_LoadError_Body"]</p>
+        <div class="actions">
+            <button class="btn btn-ghost" @onclick="LoadAsync">@L["Common_Retry"]</button>
+        </div>
+    </div>
+}
+else if (_animals.Count == 0)
+{
+    <div class="card state-card">
+        <div class="state-ico">🐾</div>
+        <h3>@L["Animals_Empty_Title"]</h3>
+        <p>@L["Animals_Empty_Body"]</p>
+        <AuthorizeView Roles="Admin,Staff">
+            <div class="actions">
+                <a class="btn btn-primary" href="animals/new">@L["Animals_AddAnimal"]</a>
+            </div>
+        </AuthorizeView>
+    </div>
+}
+else
+{
+    <div class="toolbar">
+        <button class="chip-filter @(_filter is null ? "active" : "")" @onclick="() => SetFilter(null)">
+            @L["Animals_Filter_All"] <span class="n">@_animals.Count</span>
+        </button>
+        @foreach (var status in _statusesPresent)
+        {
+            <button class="chip-filter @(_filter == status ? "active" : "")" @onclick="() => SetFilter(status)">
+                @AnimalDisplay.StatusLabel(L, status) <span class="n">@CountOf(status)</span>
+            </button>
+        }
+    </div>
+
+    <div class="card table-wrap">
+        <table class="tbl">
+            <thead>
+                <tr>
+                    <th>@L["Animals_Col_Animal"]</th>
+                    <th>@L["Animals_Col_Species"]</th>
+                    <th>@L["Animals_Col_Sex"]</th>
+                    <th>@L["Animals_Col_Age"]</th>
+                    <th>@L["Animals_Col_Status"]</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var animal in Filtered())
+                {
+                    <tr @onclick="() => OpenAnimal(animal.Id)">
+                        <td>
+                            <div class="cell-animal">
+                                <span class="thumb @AnimalDisplay.ThumbClass(animal.Species)">@AnimalDisplay.Emoji(animal.Species)</span>
+                                <span>
+                                    <b>@animal.Name</b>
+                                    <small>@(string.IsNullOrWhiteSpace(animal.Breed) ? AnimalDisplay.SpeciesLabel(L, animal.Species) : animal.Breed)</small>
+                                </span>
+                            </div>
+                        </td>
+                        <td>@AnimalDisplay.SpeciesLabel(L, animal.Species)</td>
+                        <td>@AnimalDisplay.SexLabel(L, animal.Sex)</td>
+                        <td class="muted">@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</td>
+                        <td><span class="badge @AnimalDisplay.BadgeClass(animal.Status)">@AnimalDisplay.StatusLabel(L, animal.Status)</span></td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+        <div class="table-foot">
+            <span>@L["Animals_Total", _animals.Count]</span>
+        </div>
+    </div>
+}
+
+@code {
+    private enum LoadState
+    {
+        Loading,
+        Ready,
+        Forbidden,
+        Error,
+    }
+
+    private readonly DateOnly _today = DateOnly.FromDateTime(DateTime.Today);
+    private LoadState _state = LoadState.Loading;
+    private List<AnimalResponse> _animals = [];
+    private IReadOnlyList<AnimalStatus> _statusesPresent = [];
+    private AnimalStatus? _filter;
+
+    protected override Task OnInitializedAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _state = LoadState.Loading;
+        _filter = null;
+
+        using var response = await Gateway.GetAsync("/animals", CancellationToken.None);
+
+        if (response.StatusCode == System.Net.HttpStatusCode.Forbidden)
+        {
+            _state = LoadState.Forbidden;
+            return;
+        }
+
+        if (!response.IsSuccessStatusCode)
+        {
+            _state = LoadState.Error;
+            return;
+        }
+
+        _animals =
+            await response.Content.ReadFromJsonAsync<List<AnimalResponse>>(
+                GatewayJson.Options,
+                CancellationToken.None
+            ) ?? [];
+
+        // Keep the enum's lifecycle order for the filter chips, but only show statuses in use.
+        _statusesPresent =
+        [
+            .. Enum.GetValues<AnimalStatus>().Where(s => _animals.Any(a => a.Status == s)),
+        ];
+        _state = LoadState.Ready;
+    }
+
+    private void SetFilter(AnimalStatus? status) => _filter = status;
+
+    private int CountOf(AnimalStatus status) => _animals.Count(a => a.Status == status);
+
+    private IEnumerable<AnimalResponse> Filtered() =>
+        _filter is { } status ? _animals.Where(a => a.Status == status) : _animals;
+
+    private void OpenAnimal(Guid id) => Navigation.NavigateTo($"animals/{id}");
+}
