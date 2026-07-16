@@ -1,0 +1,145 @@
+@page "/animals/{Id:guid}/edit"
+@inject GatewayClient Gateway
+@inject NavigationManager Navigation
+@inject IStringLocalizer<SharedStrings> L
+
+<PageTitle>@L["AnimalForm_Edit_Title"] · ShelterStack</PageTitle>
+
+@if (_state == LoadState.Loading)
+{
+    <div class="card state-card">
+        <p class="muted">@L["Common_Loading"]</p>
+    </div>
+}
+else if (_state == LoadState.NotFound)
+{
+    <div class="card state-card">
+        <div class="state-ico">🔍</div>
+        <h3>@L["AnimalDetail_NotFound_Title"]</h3>
+        <p>@L["AnimalDetail_NotFound_Body"]</p>
+        <div class="actions">
+            <a class="btn btn-ghost" href="animals">@L["AnimalDetail_Back"]</a>
+        </div>
+    </div>
+}
+else if (_state == LoadState.Forbidden)
+{
+    <div class="card state-card">
+        <div class="state-ico">🔒</div>
+        <h3>@L["Animals_Forbidden_Title"]</h3>
+        <p>@L["Animals_Forbidden_Body"]</p>
+        <div class="actions">
+            <a class="btn btn-ghost" href="animals">@L["AnimalDetail_Back"]</a>
+        </div>
+    </div>
+}
+else if (_state == LoadState.Error)
+{
+    <div class="card state-card">
+        <div class="state-ico">⚠️</div>
+        <h3>@L["Animals_LoadError_Title"]</h3>
+        <p>@L["Animals_LoadError_Body"]</p>
+        <div class="actions">
+            <button class="btn btn-ghost" @onclick="LoadAsync">@L["Common_Retry"]</button>
+        </div>
+    </div>
+}
+else
+{
+    <div class="page-head">
+        <div>
+            <h1>@L["AnimalForm_Edit_Title"]</h1>
+            <p>@string.Format(L["AnimalForm_Edit_Subtitle"], _name)</p>
+        </div>
+    </div>
+
+    <AnimalForm Model="_model"
+                SubmitLabel="@L["AnimalForm_Edit_Submit"].Value"
+                CancelHref="@($"animals/{Id}")"
+                Busy="_busy"
+                ServerError="@_error"
+                OnValidSubmit="SaveAsync" />
+}
+
+@code {
+    private enum LoadState
+    {
+        Loading,
+        Ready,
+        NotFound,
+        Forbidden,
+        Error,
+    }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private LoadState _state = LoadState.Loading;
+    private AnimalFormModel _model = new();
+    private string _name = string.Empty;
+    private bool _busy;
+    private string? _error;
+
+    protected override Task OnParametersSetAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _state = LoadState.Loading;
+        _error = null;
+
+        using var response = await Gateway.GetAsync($"/animals/{Id}", CancellationToken.None);
+
+        _state = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => LoadState.NotFound,
+            System.Net.HttpStatusCode.Forbidden => LoadState.Forbidden,
+            _ when response.IsSuccessStatusCode => LoadState.Ready,
+            _ => LoadState.Error,
+        };
+
+        if (_state != LoadState.Ready)
+        {
+            return;
+        }
+
+        var animal = await response.Content.ReadFromJsonAsync<AnimalResponse>(
+            GatewayJson.Options,
+            CancellationToken.None
+        );
+        if (animal is null)
+        {
+            _state = LoadState.Error;
+            return;
+        }
+
+        _name = animal.Name;
+        _model = AnimalFormModel.FromResponse(animal);
+    }
+
+    private async Task SaveAsync()
+    {
+        _busy = true;
+        _error = null;
+
+        using var response = await Gateway.SendJsonAsync(
+            HttpMethod.Put,
+            $"/animals/{Id}",
+            _model.ToRequest(),
+            CancellationToken.None
+        );
+
+        if (response.IsSuccessStatusCode)
+        {
+            Navigation.NavigateTo($"animals/{Id}");
+            return;
+        }
+
+        _error = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.Forbidden => L["AnimalForm_Error_Forbidden"],
+            System.Net.HttpStatusCode.NotFound => L["AnimalForm_Error_NotFound"],
+            _ => L["AnimalForm_Error_Generic"],
+        };
+        _busy = false;
+    }
+}
