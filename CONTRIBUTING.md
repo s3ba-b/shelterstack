@@ -36,6 +36,23 @@ cd shelterstack
 dotnet restore
 ```
 
+### Optional: CodeGraph index for AI-assisted development
+
+If you use Claude Code (or another [CodeGraph](https://github.com/colbymchenry/codegraph)-aware
+assistant), you can build a local knowledge graph of the solution's symbols and
+call paths to answer "where is X" / "what calls Y" across the `src/ShelterStack.*`
+and `tests/ShelterStack.*` projects without a grep-and-read loop:
+
+```bash
+npm i -g @colbymchenry/codegraph   # one-time, requires Node.js
+codegraph init                     # run from the repo root
+```
+
+This is **purely optional local tooling** — the project builds, tests, and runs
+identically without it. The generated `.codegraph/` directory is a derived,
+point-in-time index (like `bin/`/`obj/`) and is gitignored, so each contributor
+builds it locally.
+
 ## Running tests
 
 ```bash
