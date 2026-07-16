@@ -43,8 +43,8 @@ public sealed class GatewayClient(HttpClient http, WebAuthenticationStateProvide
 
     /// <summary>
     /// Sends an authorized request through the Gateway with the session's access token attached
-    /// as a <c>Bearer</c> header. The domain (Animals) screens build on this in a later
-    /// increment; it is the chokepoint that guarantees every Gateway call carries the token.
+    /// as a <c>Bearer</c> header. The domain (Animals) screens build on this; it is the chokepoint
+    /// that guarantees every Gateway call carries the token.
     /// </summary>
     public Task<HttpResponseMessage> SendAsync(HttpRequestMessage request, CancellationToken ct)
     {
@@ -54,6 +54,35 @@ public sealed class GatewayClient(HttpClient http, WebAuthenticationStateProvide
         }
 
         return http.SendAsync(request, ct);
+    }
+
+    /// <summary>
+    /// Issues an authorized <c>GET</c> and returns the raw response. Callers inspect the status
+    /// code themselves — a <c>403</c> (e.g. a volunteer hitting a staff-only endpoint) and a
+    /// <c>404</c> are meaningful outcomes the screens render distinct states for, not failures to
+    /// hide behind a thrown exception.
+    /// </summary>
+    public Task<HttpResponseMessage> GetAsync(string path, CancellationToken ct) =>
+        SendAsync(new HttpRequestMessage(HttpMethod.Get, path), ct);
+
+    /// <summary>
+    /// Issues an authorized request with a JSON body (create/update) and returns the raw
+    /// response, so callers can branch on <c>201/200</c>, <c>403</c>, and <c>400</c> validation.
+    /// The body is serialized with <see cref="GatewayJson.Options"/> so enums go over as names.
+    /// </summary>
+    public Task<HttpResponseMessage> SendJsonAsync<T>(
+        HttpMethod method,
+        string path,
+        T body,
+        CancellationToken ct
+    )
+    {
+        var request = new HttpRequestMessage(method, path)
+        {
+            Content = JsonContent.Create(body, options: GatewayJson.Options),
+        };
+
+        return SendAsync(request, ct);
     }
 
     private sealed record LoginResponse(string AccessToken);
