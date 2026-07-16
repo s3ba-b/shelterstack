@@ -23,7 +23,8 @@ public enum AnimalSex
 }
 
 /// <summary>Where an animal sits in its shelter lifecycle, mirroring the Animals API enum.
-/// Read-only in M3's Animals screens — status transitions are the next increment.</summary>
+/// Serialized by name; legal moves between values are enforced by the API and mirrored for the
+/// UI by <see cref="AnimalStatusTransitions"/>.</summary>
 public enum AnimalStatus
 {
     Intake,
@@ -32,6 +33,16 @@ public enum AnimalStatus
     Fostered,
     MedicalHold,
     Returned,
+}
+
+/// <summary>How an animal came to the shelter for a given intake, mirroring the Animals API
+/// enum. Serialized by name.</summary>
+public enum IntakeType
+{
+    Stray,
+    OwnerSurrender,
+    TransferIn,
+    Other,
 }
 
 /// <summary>The animal resource as returned by the Gateway's <c>/animals</c> read endpoints.
@@ -45,6 +56,38 @@ public sealed record AnimalResponse(
     DateOnly? DateOfBirth,
     string? Description,
     AnimalStatus Status
+);
+
+/// <summary>One row of an animal's status-change history, as returned by the Gateway's
+/// <c>/animals/{id}/status-history</c> endpoint. Shape mirrors
+/// <c>ShelterStack.Animals.Api.AnimalStatusHistoryResponse</c>.</summary>
+public sealed record AnimalStatusHistoryResponse(
+    Guid Id,
+    AnimalStatus Status,
+    DateTimeOffset ChangedAtUtc
+);
+
+/// <summary>One row of an animal's intake history, as returned by the Gateway's
+/// <c>/animals/{id}/intake-history</c> endpoint. Shape mirrors
+/// <c>ShelterStack.Animals.Api.IntakeRecordResponse</c>.</summary>
+public sealed record IntakeRecordResponse(
+    Guid Id,
+    DateOnly IntakeDate,
+    IntakeType IntakeType,
+    string? Notes
+);
+
+/// <summary>The body posted to move an animal to a new status. The API rejects an illegal move
+/// (see <see cref="AnimalStatusTransitions"/>) with a 400; the tenant and animal come from the
+/// token and route, never the body.</summary>
+public sealed record ChangeAnimalStatusRequest(AnimalStatus Status);
+
+/// <summary>The body posted to record an intake for an animal. The tenant and animal come from
+/// the token and route, never the body.</summary>
+public sealed record CreateIntakeRecordRequest(
+    DateOnly IntakeDate,
+    IntakeType IntakeType,
+    string? Notes
 );
 
 /// <summary>The body posted to the Gateway's create/update <c>/animals</c> endpoints. The tenant

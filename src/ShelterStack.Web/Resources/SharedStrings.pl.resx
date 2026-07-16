@@ -124,8 +124,6 @@
   <data name="AnimalDetail_DateOfBirth" xml:space="preserve"><value>Data urodzenia</value></data>
   <data name="AnimalDetail_About_Title" xml:space="preserve"><value>O tym zwierzęciu</value></data>
   <data name="AnimalDetail_About_Sub" xml:space="preserve"><value>Kartoteka wprowadzona przez Twój zespół.</value></data>
-  <data name="AnimalDetail_History_Title" xml:space="preserve"><value>Historia przyjęć i statusów</value></data>
-  <data name="AnimalDetail_History_Sub" xml:space="preserve"><value>Oś czasu przyjęć i zmian statusu pojawi się w kolejnym przyroście M3.</value></data>
 
   <!-- Animal create / edit form -->
   <data name="AnimalForm_Create_Title" xml:space="preserve"><value>Dodaj zwierzę</value></data>
@@ -176,4 +174,31 @@
   <data name="Age_LessThanMonth" xml:space="preserve"><value>&lt;1 mies.</value></data>
   <data name="Age_Months" xml:space="preserve"><value>{0} mies.</value></data>
   <data name="Age_Years" xml:space="preserve"><value>{0} lat</value></data>
+
+  <!-- Animal detail: status tracking -->
+  <data name="AnimalDetail_Status_Title" xml:space="preserve"><value>Status</value></data>
+  <data name="AnimalDetail_Status_Sub" xml:space="preserve"><value>Etap, na którym znajduje się zwierzę w schronisku, i jak zmieniał się w czasie.</value></data>
+  <data name="AnimalDetail_Status_Change" xml:space="preserve"><value>Zmień status</value></data>
+  <data name="AnimalDetail_Status_NewLabel" xml:space="preserve"><value>Zmień na</value></data>
+  <data name="AnimalDetail_Status_Save" xml:space="preserve"><value>Zaktualizuj status</value></data>
+  <data name="AnimalDetail_Status_NoMoves" xml:space="preserve"><value>Brak dostępnych zmian statusu z tego etapu.</value></data>
+  <data name="AnimalDetail_Status_Empty" xml:space="preserve"><value>Nie zarejestrowano jeszcze żadnych zmian statusu.</value></data>
+  <data name="AnimalDetail_Status_Error_Illegal" xml:space="preserve"><value>Ta zmiana statusu nie jest dozwolona z obecnego statusu zwierzęcia. Odśwież i spróbuj ponownie.</value></data>
+
+  <!-- Animal detail: intake history -->
+  <data name="AnimalDetail_Intake_Title" xml:space="preserve"><value>Historia przyjęć</value></data>
+  <data name="AnimalDetail_Intake_Sub" xml:space="preserve"><value>Każdy przypadek objęcia zwierzęcia opieką schroniska.</value></data>
+  <data name="AnimalDetail_Intake_Record" xml:space="preserve"><value>Zarejestruj przyjęcie</value></data>
+  <data name="AnimalDetail_Intake_Date" xml:space="preserve"><value>Data przyjęcia</value></data>
+  <data name="AnimalDetail_Intake_Type" xml:space="preserve"><value>Typ</value></data>
+  <data name="AnimalDetail_Intake_Notes" xml:space="preserve"><value>Notatki</value></data>
+  <data name="AnimalDetail_Intake_Notes_Placeholder" xml:space="preserve"><value>Opcjonalny kontekst — skąd trafiło zwierzę, stan w chwili przyjęcia itp.</value></data>
+  <data name="AnimalDetail_Intake_Save" xml:space="preserve"><value>Zapisz przyjęcie</value></data>
+  <data name="AnimalDetail_Intake_Empty" xml:space="preserve"><value>Nie zarejestrowano jeszcze żadnego przyjęcia.</value></data>
+
+  <!-- Intake type -->
+  <data name="IntakeType_Stray" xml:space="preserve"><value>Bezdomne</value></data>
+  <data name="IntakeType_OwnerSurrender" xml:space="preserve"><value>Oddane przez właściciela</value></data>
+  <data name="IntakeType_TransferIn" xml:space="preserve"><value>Przekazanie z innej placówki</value></data>
+  <data name="IntakeType_Other" xml:space="preserve"><value>Inne</value></data>
 </root>

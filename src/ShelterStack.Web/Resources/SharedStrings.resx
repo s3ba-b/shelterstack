@@ -124,8 +124,6 @@
   <data name="AnimalDetail_DateOfBirth" xml:space="preserve"><value>Date of birth</value></data>
   <data name="AnimalDetail_About_Title" xml:space="preserve"><value>About this animal</value></data>
   <data name="AnimalDetail_About_Sub" xml:space="preserve"><value>The record as entered by your team.</value></data>
-  <data name="AnimalDetail_History_Title" xml:space="preserve"><value>Intake &amp; status history</value></data>
-  <data name="AnimalDetail_History_Sub" xml:space="preserve"><value>The intake and status timeline arrives in the next M3 increment.</value></data>
 
   <!-- Animal create / edit form -->
   <data name="AnimalForm_Create_Title" xml:space="preserve"><value>Add animal</value></data>
@@ -176,4 +174,31 @@
   <data name="Age_LessThanMonth" xml:space="preserve"><value>&lt;1 mo</value></data>
   <data name="Age_Months" xml:space="preserve"><value>{0} mo</value></data>
   <data name="Age_Years" xml:space="preserve"><value>{0} yr</value></data>
+
+  <!-- Animal detail: status tracking -->
+  <data name="AnimalDetail_Status_Title" xml:space="preserve"><value>Status</value></data>
+  <data name="AnimalDetail_Status_Sub" xml:space="preserve"><value>Where this animal sits in its shelter journey, and how it has changed over time.</value></data>
+  <data name="AnimalDetail_Status_Change" xml:space="preserve"><value>Change status</value></data>
+  <data name="AnimalDetail_Status_NewLabel" xml:space="preserve"><value>Move to</value></data>
+  <data name="AnimalDetail_Status_Save" xml:space="preserve"><value>Update status</value></data>
+  <data name="AnimalDetail_Status_NoMoves" xml:space="preserve"><value>No status changes are available from here.</value></data>
+  <data name="AnimalDetail_Status_Empty" xml:space="preserve"><value>No status changes recorded yet.</value></data>
+  <data name="AnimalDetail_Status_Error_Illegal" xml:space="preserve"><value>That status change isn't allowed from the animal's current status. Refresh and try again.</value></data>
+
+  <!-- Animal detail: intake history -->
+  <data name="AnimalDetail_Intake_Title" xml:space="preserve"><value>Intake history</value></data>
+  <data name="AnimalDetail_Intake_Sub" xml:space="preserve"><value>Each time this animal came into the shelter's care.</value></data>
+  <data name="AnimalDetail_Intake_Record" xml:space="preserve"><value>Record intake</value></data>
+  <data name="AnimalDetail_Intake_Date" xml:space="preserve"><value>Intake date</value></data>
+  <data name="AnimalDetail_Intake_Type" xml:space="preserve"><value>Type</value></data>
+  <data name="AnimalDetail_Intake_Notes" xml:space="preserve"><value>Notes</value></data>
+  <data name="AnimalDetail_Intake_Notes_Placeholder" xml:space="preserve"><value>Optional context — where the animal came from, condition on arrival, etc.</value></data>
+  <data name="AnimalDetail_Intake_Save" xml:space="preserve"><value>Save intake</value></data>
+  <data name="AnimalDetail_Intake_Empty" xml:space="preserve"><value>No intake recorded yet.</value></data>
+
+  <!-- Intake type -->
+  <data name="IntakeType_Stray" xml:space="preserve"><value>Stray</value></data>
+  <data name="IntakeType_OwnerSurrender" xml:space="preserve"><value>Owner surrender</value></data>
+  <data name="IntakeType_TransferIn" xml:space="preserve"><value>Transfer in</value></data>
+  <data name="IntakeType_Other" xml:space="preserve"><value>Other</value></data>
 </root>
