@@ -427,3 +427,8 @@ FodyWeavers.xsd
 *.msix
 *.msm
 *.msp
+
+# CodeGraph local knowledge-graph index (optional dev tooling, see CONTRIBUTING.md).
+# Derived, point-in-time index built per clone with `codegraph init` — like bin/obj,
+# not for committing.
+.codegraph/
