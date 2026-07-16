@@ -92,9 +92,88 @@
   <data name="Home_ShellTitle" xml:space="preserve"><value>This is the application shell</value></data>
   <data name="Home_ShellBody" xml:space="preserve"><value>Navigation, layout, and the shared Aspire wiring are in place. Sign-in and the Animals screens arrive in the next M3 increments.</value></data>
 
-  <!-- Animals page -->
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>Loading…</value></data>
+  <data name="Common_Retry" xml:space="preserve"><value>Try again</value></data>
+
+  <!-- Animals list -->
   <data name="Animals_Heading" xml:space="preserve"><value>Animals</value></data>
-  <data name="Animals_Body" xml:space="preserve"><value>Records, intake history, and status for your organization's animals.</value></data>
-  <data name="Animals_ComingSoonTitle" xml:space="preserve"><value>Coming in a later M3 increment</value></data>
-  <data name="Animals_ComingSoonBody" xml:space="preserve"><value>The list, detail, create, and edit screens against the live Gateway API land in #84. This placeholder confirms the shell's navigation is wired.</value></data>
+  <data name="Animals_Body" xml:space="preserve"><value>Records and status for your organization's animals.</value></data>
+  <data name="Animals_AddAnimal" xml:space="preserve"><value>Add animal</value></data>
+  <data name="Animals_Filter_All" xml:space="preserve"><value>All</value></data>
+  <data name="Animals_Total" xml:space="preserve"><value>{0} total</value></data>
+  <data name="Animals_Col_Animal" xml:space="preserve"><value>Animal</value></data>
+  <data name="Animals_Col_Species" xml:space="preserve"><value>Species</value></data>
+  <data name="Animals_Col_Sex" xml:space="preserve"><value>Sex</value></data>
+  <data name="Animals_Col_Age" xml:space="preserve"><value>Age</value></data>
+  <data name="Animals_Col_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Animals_Empty_Title" xml:space="preserve"><value>No animals yet</value></data>
+  <data name="Animals_Empty_Body" xml:space="preserve"><value>Add your organization's first animal to start building its records.</value></data>
+  <data name="Animals_Forbidden_Title" xml:space="preserve"><value>You don't have access</value></data>
+  <data name="Animals_Forbidden_Body" xml:space="preserve"><value>Your role doesn't have permission to view animal records. Ask an administrator if you need access.</value></data>
+  <data name="Animals_LoadError_Title" xml:space="preserve"><value>Couldn't load animals</value></data>
+  <data name="Animals_LoadError_Body" xml:space="preserve"><value>Something went wrong reaching the server. Please try again.</value></data>
+
+  <!-- Animal detail -->
+  <data name="AnimalDetail_Back" xml:space="preserve"><value>Back to animals</value></data>
+  <data name="AnimalDetail_Edit" xml:space="preserve"><value>Edit</value></data>
+  <data name="AnimalDetail_NotFound_Title" xml:space="preserve"><value>Animal not found</value></data>
+  <data name="AnimalDetail_NotFound_Body" xml:space="preserve"><value>This animal doesn't exist, or it isn't part of your organization.</value></data>
+  <data name="AnimalDetail_NoDescription" xml:space="preserve"><value>No description provided.</value></data>
+  <data name="AnimalDetail_NotRecorded" xml:space="preserve"><value>Not recorded</value></data>
+  <data name="AnimalDetail_DateOfBirth" xml:space="preserve"><value>Date of birth</value></data>
+  <data name="AnimalDetail_About_Title" xml:space="preserve"><value>About this animal</value></data>
+  <data name="AnimalDetail_About_Sub" xml:space="preserve"><value>The record as entered by your team.</value></data>
+  <data name="AnimalDetail_History_Title" xml:space="preserve"><value>Intake &amp; status history</value></data>
+  <data name="AnimalDetail_History_Sub" xml:space="preserve"><value>The intake and status timeline arrives in the next M3 increment.</value></data>
+
+  <!-- Animal create / edit form -->
+  <data name="AnimalForm_Create_Title" xml:space="preserve"><value>Add animal</value></data>
+  <data name="AnimalForm_Create_Subtitle" xml:space="preserve"><value>Create a new animal record for your organization.</value></data>
+  <data name="AnimalForm_Create_Submit" xml:space="preserve"><value>Add animal</value></data>
+  <data name="AnimalForm_Edit_Title" xml:space="preserve"><value>Edit animal</value></data>
+  <data name="AnimalForm_Edit_Subtitle" xml:space="preserve"><value>Update {0}'s record.</value></data>
+  <data name="AnimalForm_Edit_Submit" xml:space="preserve"><value>Save changes</value></data>
+  <data name="AnimalForm_Name" xml:space="preserve"><value>Name</value></data>
+  <data name="AnimalForm_Name_Placeholder" xml:space="preserve"><value>e.g. Biscuit</value></data>
+  <data name="AnimalForm_Species" xml:space="preserve"><value>Species</value></data>
+  <data name="AnimalForm_Sex" xml:space="preserve"><value>Sex</value></data>
+  <data name="AnimalForm_Breed" xml:space="preserve"><value>Breed</value></data>
+  <data name="AnimalForm_Breed_Placeholder" xml:space="preserve"><value>e.g. Labrador mix</value></data>
+  <data name="AnimalForm_DateOfBirth" xml:space="preserve"><value>Date of birth</value></data>
+  <data name="AnimalForm_DateOfBirth_Hint" xml:space="preserve"><value>Approximate is fine; leave blank if unknown.</value></data>
+  <data name="AnimalForm_Description" xml:space="preserve"><value>Description</value></data>
+  <data name="AnimalForm_Description_Placeholder" xml:space="preserve"><value>Temperament, notes, anything staff should know…</value></data>
+  <data name="AnimalForm_Cancel" xml:space="preserve"><value>Cancel</value></data>
+  <data name="AnimalForm_Saving" xml:space="preserve"><value>Saving…</value></data>
+  <data name="AnimalForm_Required_Name" xml:space="preserve"><value>Name is required.</value></data>
+  <data name="AnimalForm_Error_Forbidden" xml:space="preserve"><value>Your role doesn't have permission to make this change.</value></data>
+  <data name="AnimalForm_Error_Generic" xml:space="preserve"><value>Something went wrong saving. Please try again.</value></data>
+  <data name="AnimalForm_Error_NotFound" xml:space="preserve"><value>This animal no longer exists.</value></data>
+
+  <!-- Species -->
+  <data name="Species_Dog" xml:space="preserve"><value>Dog</value></data>
+  <data name="Species_Cat" xml:space="preserve"><value>Cat</value></data>
+  <data name="Species_Rabbit" xml:space="preserve"><value>Rabbit</value></data>
+  <data name="Species_Bird" xml:space="preserve"><value>Bird</value></data>
+  <data name="Species_Other" xml:space="preserve"><value>Other</value></data>
+
+  <!-- Sex -->
+  <data name="Sex_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Sex_Male" xml:space="preserve"><value>Male</value></data>
+  <data name="Sex_Female" xml:space="preserve"><value>Female</value></data>
+
+  <!-- Status -->
+  <data name="Status_Intake" xml:space="preserve"><value>Intake</value></data>
+  <data name="Status_Available" xml:space="preserve"><value>Available</value></data>
+  <data name="Status_Adopted" xml:space="preserve"><value>Adopted</value></data>
+  <data name="Status_Fostered" xml:space="preserve"><value>In foster care</value></data>
+  <data name="Status_MedicalHold" xml:space="preserve"><value>Medical hold</value></data>
+  <data name="Status_Returned" xml:space="preserve"><value>Returned</value></data>
+
+  <!-- Age -->
+  <data name="Age_Unknown" xml:space="preserve"><value>Unknown</value></data>
+  <data name="Age_LessThanMonth" xml:space="preserve"><value>&lt;1 mo</value></data>
+  <data name="Age_Months" xml:space="preserve"><value>{0} mo</value></data>
+  <data name="Age_Years" xml:space="preserve"><value>{0} yr</value></data>
 </root>
