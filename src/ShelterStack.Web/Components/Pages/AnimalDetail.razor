@@ -1,0 +1,156 @@
+@page "/animals/{Id:guid}"
+@inject GatewayClient Gateway
+@inject IStringLocalizer<SharedStrings> L
+
+<PageTitle>@(_animal?.Name ?? L["Animals_Heading"].Value) · ShelterStack</PageTitle>
+
+@if (_state == LoadState.Loading)
+{
+    <div class="card state-card">
+        <p class="muted">@L["Common_Loading"]</p>
+    </div>
+}
+else if (_state == LoadState.NotFound)
+{
+    <div class="card state-card">
+        <div class="state-ico">🔍</div>
+        <h3>@L["AnimalDetail_NotFound_Title"]</h3>
+        <p>@L["AnimalDetail_NotFound_Body"]</p>
+        <div class="actions">
+            <a class="btn btn-ghost" href="animals">@L["AnimalDetail_Back"]</a>
+        </div>
+    </div>
+}
+else if (_state == LoadState.Forbidden)
+{
+    <div class="card state-card">
+        <div class="state-ico">🔒</div>
+        <h3>@L["Animals_Forbidden_Title"]</h3>
+        <p>@L["Animals_Forbidden_Body"]</p>
+        <div class="actions">
+            <a class="btn btn-ghost" href="animals">@L["AnimalDetail_Back"]</a>
+        </div>
+    </div>
+}
+else if (_state == LoadState.Error)
+{
+    <div class="card state-card">
+        <div class="state-ico">⚠️</div>
+        <h3>@L["Animals_LoadError_Title"]</h3>
+        <p>@L["Animals_LoadError_Body"]</p>
+        <div class="actions">
+            <button class="btn btn-ghost" @onclick="LoadAsync">@L["Common_Retry"]</button>
+        </div>
+    </div>
+}
+else if (_animal is { } animal)
+{
+    <div class="page-head">
+        <div>
+            <h1>
+                @animal.Name
+                <span class="badge @AnimalDisplay.BadgeClass(animal.Status)" style="vertical-align:middle;font-size:0.8rem;">@AnimalDisplay.StatusLabel(L, animal.Status)</span>
+            </h1>
+            <p>@SummaryLine(animal)</p>
+        </div>
+        <div class="actions">
+            <a class="btn btn-ghost" href="animals">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7" /></svg>
+                @L["AnimalDetail_Back"]
+            </a>
+            <AuthorizeView Roles="Admin,Staff">
+                <a class="btn btn-primary" href="animals/@animal.Id/edit">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" /></svg>
+                    @L["AnimalDetail_Edit"]
+                </a>
+            </AuthorizeView>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <div class="card profile-card">
+            <div class="profile-photo">@AnimalDisplay.Emoji(animal.Species)</div>
+            <div class="profile-body">
+                <h2>@animal.Name</h2>
+                <div class="sub">@(string.IsNullOrWhiteSpace(animal.Description) ? L["AnimalDetail_NoDescription"].Value : animal.Description)</div>
+                <dl class="kv">
+                    <div><dt>@L["AnimalForm_Species"]</dt><dd>@AnimalDisplay.SpeciesLabel(L, animal.Species)</dd></div>
+                    <div><dt>@L["AnimalForm_Breed"]</dt><dd>@(string.IsNullOrWhiteSpace(animal.Breed) ? L["AnimalDetail_NotRecorded"].Value : animal.Breed)</dd></div>
+                    <div><dt>@L["AnimalForm_Sex"]</dt><dd>@AnimalDisplay.SexLabel(L, animal.Sex)</dd></div>
+                    <div><dt>@L["AnimalDetail_DateOfBirth"]</dt><dd>@(animal.DateOfBirth is { } dob ? dob.ToString("d", CultureInfo.CurrentUICulture) : L["AnimalDetail_NotRecorded"].Value)</dd></div>
+                    <div><dt>@L["Animals_Col_Age"]</dt><dd>@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</dd></div>
+                    <div><dt>@L["Animals_Col_Status"]</dt><dd>@AnimalDisplay.StatusLabel(L, animal.Status)</dd></div>
+                </dl>
+            </div>
+        </div>
+
+        <div>
+            <div class="card section-card">
+                <h3>@L["AnimalDetail_About_Title"]</h3>
+                <p class="sub">@L["AnimalDetail_About_Sub"]</p>
+                <p>@(string.IsNullOrWhiteSpace(animal.Description) ? L["AnimalDetail_NoDescription"].Value : animal.Description)</p>
+            </div>
+
+            <div class="card section-card">
+                <h3>@L["AnimalDetail_History_Title"]</h3>
+                <p class="sub">@L["AnimalDetail_History_Sub"]</p>
+            </div>
+        </div>
+    </div>
+}
+
+@code {
+    private enum LoadState
+    {
+        Loading,
+        Ready,
+        NotFound,
+        Forbidden,
+        Error,
+    }
+
+    [Parameter]
+    public Guid Id { get; set; }
+
+    private readonly DateOnly _today = DateOnly.FromDateTime(DateTime.Today);
+    private LoadState _state = LoadState.Loading;
+    private AnimalResponse? _animal;
+
+    protected override Task OnParametersSetAsync() => LoadAsync();
+
+    private async Task LoadAsync()
+    {
+        _state = LoadState.Loading;
+
+        using var response = await Gateway.GetAsync($"/animals/{Id}", CancellationToken.None);
+
+        _state = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.NotFound => LoadState.NotFound,
+            System.Net.HttpStatusCode.Forbidden => LoadState.Forbidden,
+            _ when response.IsSuccessStatusCode => LoadState.Ready,
+            _ => LoadState.Error,
+        };
+
+        if (_state == LoadState.Ready)
+        {
+            _animal = await response.Content.ReadFromJsonAsync<AnimalResponse>(
+                GatewayJson.Options,
+                CancellationToken.None
+            );
+        }
+    }
+
+    // "Dog · Labrador mix · Male · 2 yr", skipping the breed when it isn't recorded.
+    private string SummaryLine(AnimalResponse animal)
+    {
+        var parts = new List<string> { AnimalDisplay.SpeciesLabel(L, animal.Species) };
+        if (!string.IsNullOrWhiteSpace(animal.Breed))
+        {
+            parts.Add(animal.Breed);
+        }
+        parts.Add(AnimalDisplay.SexLabel(L, animal.Sex));
+        parts.Add(AnimalDisplay.Age(L, animal.DateOfBirth, _today));
+        return string.Join(" · ", parts);
+    }
+}

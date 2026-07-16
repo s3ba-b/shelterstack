@@ -97,12 +97,17 @@
         Navigation.NavigateTo(target, replace: true);
     }
 
-    private string CurrentPageTitle =>
-        Navigation.ToBaseRelativePath(Navigation.Uri).TrimEnd('/') switch
+    private string CurrentPageTitle
+    {
+        get
         {
-            "animals" => L["Shell_PageTitle_Animals"],
-            _ => L["Shell_PageTitle_Overview"],
-        };
+            var path = Navigation.ToBaseRelativePath(Navigation.Uri).TrimEnd('/');
+            // "animals", "animals/new", "animals/{id}", "animals/{id}/edit" all sit under Animals.
+            return path == "animals" || path.StartsWith("animals/", StringComparison.Ordinal)
+                ? L["Shell_PageTitle_Animals"]
+                : L["Shell_PageTitle_Overview"];
+        }
+    }
 
     private sealed class SessionInfo
     {
