@@ -92,9 +92,88 @@
   <data name="Home_ShellTitle" xml:space="preserve"><value>To jest powłoka aplikacji</value></data>
   <data name="Home_ShellBody" xml:space="preserve"><value>Nawigacja, układ i integracja z Aspire są gotowe. Logowanie i widoki zwierząt pojawią się w kolejnych przyrostach M3.</value></data>
 
-  <!-- Animals page -->
+  <!-- Common -->
+  <data name="Common_Loading" xml:space="preserve"><value>Ładowanie…</value></data>
+  <data name="Common_Retry" xml:space="preserve"><value>Spróbuj ponownie</value></data>
+
+  <!-- Animals list -->
   <data name="Animals_Heading" xml:space="preserve"><value>Zwierzęta</value></data>
-  <data name="Animals_Body" xml:space="preserve"><value>Kartoteki, historia przyjęć i status zwierząt w Twojej organizacji.</value></data>
-  <data name="Animals_ComingSoonTitle" xml:space="preserve"><value>Dostępne w późniejszym przyroście M3</value></data>
-  <data name="Animals_ComingSoonBody" xml:space="preserve"><value>Listy, szczegóły, tworzenie i edycja połączone z bramką API pojawią się w #84. Ten widok potwierdza, że nawigacja w powłoce działa.</value></data>
+  <data name="Animals_Body" xml:space="preserve"><value>Kartoteki i status zwierząt w Twojej organizacji.</value></data>
+  <data name="Animals_AddAnimal" xml:space="preserve"><value>Dodaj zwierzę</value></data>
+  <data name="Animals_Filter_All" xml:space="preserve"><value>Wszystkie</value></data>
+  <data name="Animals_Total" xml:space="preserve"><value>Łącznie: {0}</value></data>
+  <data name="Animals_Col_Animal" xml:space="preserve"><value>Zwierzę</value></data>
+  <data name="Animals_Col_Species" xml:space="preserve"><value>Gatunek</value></data>
+  <data name="Animals_Col_Sex" xml:space="preserve"><value>Płeć</value></data>
+  <data name="Animals_Col_Age" xml:space="preserve"><value>Wiek</value></data>
+  <data name="Animals_Col_Status" xml:space="preserve"><value>Status</value></data>
+  <data name="Animals_Empty_Title" xml:space="preserve"><value>Brak zwierząt</value></data>
+  <data name="Animals_Empty_Body" xml:space="preserve"><value>Dodaj pierwsze zwierzę swojej organizacji, aby rozpocząć prowadzenie kartotek.</value></data>
+  <data name="Animals_Forbidden_Title" xml:space="preserve"><value>Brak dostępu</value></data>
+  <data name="Animals_Forbidden_Body" xml:space="preserve"><value>Twoja rola nie ma uprawnień do przeglądania kartotek zwierząt. Poproś administratora o dostęp.</value></data>
+  <data name="Animals_LoadError_Title" xml:space="preserve"><value>Nie udało się wczytać zwierząt</value></data>
+  <data name="Animals_LoadError_Body" xml:space="preserve"><value>Wystąpił problem z połączeniem z serwerem. Spróbuj ponownie.</value></data>
+
+  <!-- Animal detail -->
+  <data name="AnimalDetail_Back" xml:space="preserve"><value>Powrót do zwierząt</value></data>
+  <data name="AnimalDetail_Edit" xml:space="preserve"><value>Edytuj</value></data>
+  <data name="AnimalDetail_NotFound_Title" xml:space="preserve"><value>Nie znaleziono zwierzęcia</value></data>
+  <data name="AnimalDetail_NotFound_Body" xml:space="preserve"><value>To zwierzę nie istnieje lub nie należy do Twojej organizacji.</value></data>
+  <data name="AnimalDetail_NoDescription" xml:space="preserve"><value>Brak opisu.</value></data>
+  <data name="AnimalDetail_NotRecorded" xml:space="preserve"><value>Nie podano</value></data>
+  <data name="AnimalDetail_DateOfBirth" xml:space="preserve"><value>Data urodzenia</value></data>
+  <data name="AnimalDetail_About_Title" xml:space="preserve"><value>O tym zwierzęciu</value></data>
+  <data name="AnimalDetail_About_Sub" xml:space="preserve"><value>Kartoteka wprowadzona przez Twój zespół.</value></data>
+  <data name="AnimalDetail_History_Title" xml:space="preserve"><value>Historia przyjęć i statusów</value></data>
+  <data name="AnimalDetail_History_Sub" xml:space="preserve"><value>Oś czasu przyjęć i zmian statusu pojawi się w kolejnym przyroście M3.</value></data>
+
+  <!-- Animal create / edit form -->
+  <data name="AnimalForm_Create_Title" xml:space="preserve"><value>Dodaj zwierzę</value></data>
+  <data name="AnimalForm_Create_Subtitle" xml:space="preserve"><value>Utwórz nową kartotekę zwierzęcia dla swojej organizacji.</value></data>
+  <data name="AnimalForm_Create_Submit" xml:space="preserve"><value>Dodaj zwierzę</value></data>
+  <data name="AnimalForm_Edit_Title" xml:space="preserve"><value>Edytuj zwierzę</value></data>
+  <data name="AnimalForm_Edit_Subtitle" xml:space="preserve"><value>Zaktualizuj kartotekę: {0}.</value></data>
+  <data name="AnimalForm_Edit_Submit" xml:space="preserve"><value>Zapisz zmiany</value></data>
+  <data name="AnimalForm_Name" xml:space="preserve"><value>Imię</value></data>
+  <data name="AnimalForm_Name_Placeholder" xml:space="preserve"><value>np. Biscuit</value></data>
+  <data name="AnimalForm_Species" xml:space="preserve"><value>Gatunek</value></data>
+  <data name="AnimalForm_Sex" xml:space="preserve"><value>Płeć</value></data>
+  <data name="AnimalForm_Breed" xml:space="preserve"><value>Rasa</value></data>
+  <data name="AnimalForm_Breed_Placeholder" xml:space="preserve"><value>np. mieszaniec labradora</value></data>
+  <data name="AnimalForm_DateOfBirth" xml:space="preserve"><value>Data urodzenia</value></data>
+  <data name="AnimalForm_DateOfBirth_Hint" xml:space="preserve"><value>Przybliżona wystarczy; pozostaw puste, jeśli nieznana.</value></data>
+  <data name="AnimalForm_Description" xml:space="preserve"><value>Opis</value></data>
+  <data name="AnimalForm_Description_Placeholder" xml:space="preserve"><value>Temperament, uwagi, wszystko, co personel powinien wiedzieć…</value></data>
+  <data name="AnimalForm_Cancel" xml:space="preserve"><value>Anuluj</value></data>
+  <data name="AnimalForm_Saving" xml:space="preserve"><value>Zapisywanie…</value></data>
+  <data name="AnimalForm_Required_Name" xml:space="preserve"><value>Imię jest wymagane.</value></data>
+  <data name="AnimalForm_Error_Forbidden" xml:space="preserve"><value>Twoja rola nie ma uprawnień do wprowadzenia tej zmiany.</value></data>
+  <data name="AnimalForm_Error_Generic" xml:space="preserve"><value>Wystąpił problem podczas zapisywania. Spróbuj ponownie.</value></data>
+  <data name="AnimalForm_Error_NotFound" xml:space="preserve"><value>To zwierzę już nie istnieje.</value></data>
+
+  <!-- Species -->
+  <data name="Species_Dog" xml:space="preserve"><value>Pies</value></data>
+  <data name="Species_Cat" xml:space="preserve"><value>Kot</value></data>
+  <data name="Species_Rabbit" xml:space="preserve"><value>Królik</value></data>
+  <data name="Species_Bird" xml:space="preserve"><value>Ptak</value></data>
+  <data name="Species_Other" xml:space="preserve"><value>Inne</value></data>
+
+  <!-- Sex -->
+  <data name="Sex_Unknown" xml:space="preserve"><value>Nieznana</value></data>
+  <data name="Sex_Male" xml:space="preserve"><value>Samiec</value></data>
+  <data name="Sex_Female" xml:space="preserve"><value>Samica</value></data>
+
+  <!-- Status -->
+  <data name="Status_Intake" xml:space="preserve"><value>Przyjęcie</value></data>
+  <data name="Status_Available" xml:space="preserve"><value>Dostępny</value></data>
+  <data name="Status_Adopted" xml:space="preserve"><value>Adoptowany</value></data>
+  <data name="Status_Fostered" xml:space="preserve"><value>Dom tymczasowy</value></data>
+  <data name="Status_MedicalHold" xml:space="preserve"><value>Kwarantanna medyczna</value></data>
+  <data name="Status_Returned" xml:space="preserve"><value>Zwrócony</value></data>
+
+  <!-- Age -->
+  <data name="Age_Unknown" xml:space="preserve"><value>Nieznany</value></data>
+  <data name="Age_LessThanMonth" xml:space="preserve"><value>&lt;1 mies.</value></data>
+  <data name="Age_Months" xml:space="preserve"><value>{0} mies.</value></data>
+  <data name="Age_Years" xml:space="preserve"><value>{0} lat</value></data>
 </root>
