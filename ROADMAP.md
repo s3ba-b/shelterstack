@@ -20,6 +20,31 @@ ShelterStack is delivered **iteratively-incrementally**: each milestone is a wor
 
 Each milestone above also exists as a [GitHub milestone](https://github.com/s3ba-b/shelterstack/milestones) with this same definition of done.
 
+## Versioning: MVP and V1
+
+"MVP" and "V1" are kept distinct here in their standard software-engineering
+sense — they are not synonyms, and neither is a rename of a milestone:
+
+- **MVP (minimum viable product)** — the earliest checkpoint at which the system
+  does something genuinely useful end-to-end: a staff user signs in and manages
+  their organisation's animals through the web app (reached around **M3**, extended
+  by **M4**). In this solo, non-commercial project the MVP is a *demoable increment
+  used to validate the architecture and UX* — it is **not a public release**, because
+  there are no external users to ship to yet and the release-readiness work (below)
+  is deliberately deferred.
+- **V1 (first release)** — the first version actually fit to be run by a real
+  organisation. V1 is **the completed M0–M6 arc** plus the release gate that lives in
+  **M6**: the full cross-tenant isolation suite green in CI, a documented Docker
+  Compose deployment, an architecture diagram and README, and the hard pre-release
+  blockers closed — the cross-tenant `/users` leak
+  ([#106](https://github.com/s3ba-b/shelterstack/issues/106)), `/login` hardening
+  ([#108](https://github.com/s3ba-b/shelterstack/issues/108)), and the out-of-band
+  JWT signing key ([#109](https://github.com/s3ba-b/shelterstack/issues/109)). Until
+  those are done the software is demoable but not releasable.
+
+Delivery focus is **V1**. Earlier milestones are demoable increments on the way to
+it, not separately shipped releases.
+
 ## Post-v1 extensions
 
 Beyond the original 6-month M0–M6 arc (see the charter's [Constraints](CHARTER.md#constraints)),
@@ -71,3 +96,14 @@ This is the same process used to break down M0 into its initial five issues.
 ## Out of scope (this version)
 
 Payment processing, public-facing adopter portals, and mobile apps are explicitly out of scope. The internal **staff-facing web UI is now in scope (M3)** — it is distinct from the excluded public-facing adopter portal. See the project charter's constraints ([CHARTER.md](CHARTER.md)) for the full list and rationale.
+
+**Animal-type coverage (open V1 scope decision).** The animal model ships a fixed
+species set — dog, cat, rabbit, bird, and an "Other" catch-all — and no free-text
+field to record what "Other" actually is. Different **organisations** are fully
+supported (multi-tenancy, isolation-tested since M0–M2), but shelters whose primary
+animals fall outside that set (equine, farm/livestock, reptile/exotic, wildlife
+rehab) can only file them under "Other", with no first-class species label to filter
+or report on. Whether V1 stays companion-animal-focused, adds a free-text species, or
+makes species per-tenant configurable is tracked in
+[issue #132](https://github.com/s3ba-b/shelterstack/issues/132). Left unresolved, V1
+functionally targets companion-animal shelters.
