@@ -15,7 +15,7 @@
 
 <header class="hero">
   <div class="container">
-    <span class="badge" data-i18n="hero.badge">In active development · M1 identity &amp; access</span>
+    <span class="badge" data-i18n="hero.badge">In active development · M4 adoption &amp; fostering</span>
     <h1>ShelterStack</h1>
     <p class="tagline" data-i18n="hero.tagline">A free tool that helps animal shelters and rescues keep track of their animals,
       adoptions, foster homes, and vet appointments — so they can stop juggling spreadsheets, without
@@ -45,9 +45,10 @@
       <div class="grid">
         <div class="card">
           <h3 data-i18n="card1.t">Private to each shelter</h3>
-          <p data-i18n="card1.d">Many shelters can share one installation, but each one only ever sees its own animals,
-            people, and records. That separation is built deep into the system — not just hidden on
-            the screen.</p>
+          <p data-i18n="card1.d">One organisation can host a single installation for many small shelters at once — and each
+            shelter only ever sees its own animals, people, and records. That separation is built deep
+            into the system and checked automatically before every release, not just hidden on the
+            screen.</p>
         </div>
         <div class="card">
           <h3 data-i18n="card2.t">Animal records</h3>
@@ -80,11 +81,11 @@
 
   <section class="section" id="preview">
     <div class="container">
-      <span class="badge" data-i18n="preview.badge">Design preview · M3 in development</span>
+      <span class="badge" data-i18n="preview.badge">Design preview · the staff app</span>
       <h2 data-i18n="preview.h2">A look at the staff app</h2>
-      <p class="lead" data-i18n="preview.lead">Here's the direction for the screen shelter staff and volunteers will use day to
-        day. These are early design mock-ups with sample data — the staff app itself is still being
-        built (milestone M3), so what you see here isn't live yet.</p>
+      <p class="lead" data-i18n="preview.lead">Here's the screen shelter staff and volunteers use day to day. These are design
+        mock-ups with sample data — the staff app is built and growing with each milestone, but a
+        public demo isn't online yet (it goes live after the final milestone).</p>
       <div class="shots">
         <figure class="shot">
           <a class="shot-link" href="images/preview/full/index.png" target="_blank" rel="noopener">
@@ -169,13 +170,30 @@
         try — not a half-finished layer.</p>
       <ol class="roadmap">
         <li><strong data-i18n="roadmap.m0.t">M0 — Walking skeleton</strong><span data-i18n="roadmap.m0.d">The foundations: the system runs end to end, and the data-privacy safeguard is proven by an automated test. </span><em data-i18n="roadmap.status.done">Done.</em></li>
-        <li><strong data-i18n="roadmap.m1.t">M1 — Identity &amp; access</strong><span data-i18n="roadmap.m1.d">Secure sign-in, with the right level of access for each person and shelter.</span><em data-i18n="roadmap.status.inProgress">In progress.</em></li>
-        <li><strong data-i18n="roadmap.m2.t">M2 — Animals</strong><span data-i18n="roadmap.m2.d">The first complete feature, start to finish: animal records, intake, and status.</span></li>
-        <li><strong data-i18n="roadmap.m3.t">M3 — A screen for staff</strong><span data-i18n="roadmap.m3.d">An easy-to-use website where shelter staff and volunteers sign in and manage their animals, day to day.</span></li>
-        <li><strong data-i18n="roadmap.m4.t">M4 — Adoption &amp; fostering</strong><span data-i18n="roadmap.m4.d">Adoption applications, approvals, and foster placements.</span></li>
+        <li><strong data-i18n="roadmap.m1.t">M1 — Identity &amp; access</strong><span data-i18n="roadmap.m1.d">Secure sign-in, with the right level of access for each person and shelter.</span><em data-i18n="roadmap.status.done">Done.</em></li>
+        <li><strong data-i18n="roadmap.m2.t">M2 — Animals</strong><span data-i18n="roadmap.m2.d">The first complete feature, start to finish: animal records, intake, and status.</span><em data-i18n="roadmap.status.done">Done.</em></li>
+        <li><strong data-i18n="roadmap.m3.t">M3 — A screen for staff</strong><span data-i18n="roadmap.m3.d">An easy-to-use website where shelter staff and volunteers sign in and manage their animals, day to day.</span><em data-i18n="roadmap.status.done">Done.</em></li>
+        <li><strong data-i18n="roadmap.m4.t">M4 — Adoption &amp; fostering</strong><span data-i18n="roadmap.m4.d">Adoption applications, approvals, and foster placements.</span><em data-i18n="roadmap.status.inProgress">In progress.</em></li>
         <li><strong data-i18n="roadmap.m5.t">M5 — Medical scheduling &amp; background worker</strong><span data-i18n="roadmap.m5.d">Automatic reminders for vaccinations and treatments before they're due.</span></li>
         <li><strong data-i18n="roadmap.m6.t">M6 — Hardening &amp; release</strong><span data-i18n="roadmap.m6.d">Final safety checks, simple self-hosting, and an architecture overview.</span></li>
       </ol>
+      <h3 class="beyond-h3" data-i18n="beyond.h3">Further ahead — ideas we're exploring</h3>
+      <p class="lead" data-i18n="beyond.lead">Not promises, and not part of the plan above — a few directions that could set ShelterStack
+        apart, drawn from looking at what other shelter software does and doesn't do.</p>
+      <div class="grid">
+        <div class="card">
+          <h3 data-i18n="beyond.c1.t">Move an animal between shelters</h3>
+          <p data-i18n="beyond.c1.d">When one shelter passes an animal to another, its whole story — where it came from and its
+            vet care — could travel with it, but only when both shelters explicitly agree. Tools that
+            keep every shelter walled off have no reason to build this.</p>
+        </div>
+        <div class="card">
+          <h3 data-i18n="beyond.c2.t">Built for European privacy rules (GDPR)</h3>
+          <p data-i18n="beyond.c2.d">Exporting a person's data, erasing it on request, and keeping a clear record of what was
+            done — offered as everyday features for shelter admins, not compliance paperwork bolted on
+            later. Software built outside the EU usually skips this.</p>
+        </div>
+      </div>
       <p class="roadmap-full"><a href="https://github.com/s3ba-b/shelterstack/blob/main/ROADMAP.md" data-i18n="roadmap.full">See the full roadmap on GitHub ↗</a></p>
     </div>
   </section>

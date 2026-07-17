@@ -212,7 +212,9 @@ a:focus-visible {
 .roadmap span { color: var(--muted); font-size: 0.92rem; }
 .roadmap em { color: var(--accent); font-style: normal; }
 
-.roadmap-full { margin: 20px 0 0; }
+.beyond-h3 { margin: 48px 0 4px; font-size: 1.2rem; }
+
+.roadmap-full { margin: 28px 0 0; }
 .roadmap-full a {
   color: var(--accent);
   text-decoration: none;
