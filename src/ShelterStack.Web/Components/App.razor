@@ -9,8 +9,9 @@
     <ResourcePreloader />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
+    @* app.css is generated from Styles/app.tailwind.css by the Tailwind CLI on build. The
+       Blazor scoped-CSS bundle is gone — this project no longer ships any .razor.css. *@
     <link rel="stylesheet" href="@Assets["app.css"]" />
-    <link rel="stylesheet" href="@Assets["ShelterStack.Web.styles.css"]" />
     <ImportMap />
     <HeadOutlet @rendermode="InteractiveServer" />
 </head>

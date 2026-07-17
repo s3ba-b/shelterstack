@@ -7,7 +7,7 @@
 @if (_state == LoadState.Loading)
 {
     <div class="card state-card">
-        <p class="muted">@L["Common_Loading"]</p>
+        <p class="text-muted">@L["Common_Loading"]</p>
     </div>
 }
 else if (_state == LoadState.NotFound)
@@ -49,7 +49,7 @@ else if (_animal is { } animal)
         <div>
             <h1>
                 @animal.Name
-                <span class="badge @AnimalDisplay.BadgeClass(animal.Status)" style="vertical-align:middle;font-size:0.8rem;">@AnimalDisplay.StatusLabel(L, animal.Status)</span>
+                <span class="badge align-middle text-[0.8rem] @AnimalDisplay.BadgeClass(animal.Status)">@AnimalDisplay.StatusLabel(L, animal.Status)</span>
             </h1>
             <p>@SummaryLine(animal)</p>
         </div>
@@ -67,19 +67,19 @@ else if (_animal is { } animal)
         </div>
     </div>
 
-    <div class="detail-grid">
-        <div class="card profile-card">
-            <div class="profile-photo">@AnimalDisplay.Emoji(animal.Species)</div>
-            <div class="profile-body">
-                <h2>@animal.Name</h2>
-                <div class="sub">@(string.IsNullOrWhiteSpace(animal.Description) ? L["AnimalDetail_NoDescription"].Value : animal.Description)</div>
-                <dl class="kv">
-                    <div><dt>@L["AnimalForm_Species"]</dt><dd>@AnimalDisplay.SpeciesLabel(L, animal.Species)</dd></div>
-                    <div><dt>@L["AnimalForm_Breed"]</dt><dd>@(string.IsNullOrWhiteSpace(animal.Breed) ? L["AnimalDetail_NotRecorded"].Value : animal.Breed)</dd></div>
-                    <div><dt>@L["AnimalForm_Sex"]</dt><dd>@AnimalDisplay.SexLabel(L, animal.Sex)</dd></div>
-                    <div><dt>@L["AnimalDetail_DateOfBirth"]</dt><dd>@(animal.DateOfBirth is { } dob ? dob.ToString("d", CultureInfo.CurrentUICulture) : L["AnimalDetail_NotRecorded"].Value)</dd></div>
-                    <div><dt>@L["Animals_Col_Age"]</dt><dd>@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</dd></div>
-                    <div><dt>@L["Animals_Col_Status"]</dt><dd>@AnimalDisplay.StatusLabel(L, animal.Status)</dd></div>
+    <div class="grid grid-cols-1 items-start gap-6 min-[1081px]:grid-cols-[320px_1fr]">
+        <div class="card overflow-hidden">
+            <div class="grid h-[200px] place-items-center bg-[linear-gradient(160deg,#fbf0dd,#f5e3c4)] text-[4.5rem]">@AnimalDisplay.Emoji(animal.Species)</div>
+            <div class="p-5">
+                <h2 class="text-[1.3rem] font-bold">@animal.Name</h2>
+                <div class="mt-0.5 text-[0.86rem] text-muted">@(string.IsNullOrWhiteSpace(animal.Description) ? L["AnimalDetail_NoDescription"].Value : animal.Description)</div>
+                <dl class="mt-[18px] flex flex-col [&>div:last-child]:border-b-0 [&_dt]:text-muted [&_dd]:m-0 [&_dd]:font-medium [&_dd]:text-text">
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["AnimalForm_Species"]</dt><dd>@AnimalDisplay.SpeciesLabel(L, animal.Species)</dd></div>
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["AnimalForm_Breed"]</dt><dd>@(string.IsNullOrWhiteSpace(animal.Breed) ? L["AnimalDetail_NotRecorded"].Value : animal.Breed)</dd></div>
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["AnimalForm_Sex"]</dt><dd>@AnimalDisplay.SexLabel(L, animal.Sex)</dd></div>
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["AnimalDetail_DateOfBirth"]</dt><dd>@(animal.DateOfBirth is { } dob ? dob.ToString("d", CultureInfo.CurrentUICulture) : L["AnimalDetail_NotRecorded"].Value)</dd></div>
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["Animals_Col_Age"]</dt><dd>@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</dd></div>
+                    <div class="flex justify-between border-b border-border py-[9px] text-[0.86rem]"><dt>@L["Animals_Col_Status"]</dt><dd>@AnimalDisplay.StatusLabel(L, animal.Status)</dd></div>
                 </dl>
             </div>
         </div>
@@ -87,15 +87,15 @@ else if (_animal is { } animal)
         <div>
             <div class="card section-card">
                 <h3>@L["AnimalDetail_About_Title"]</h3>
-                <p class="sub">@L["AnimalDetail_About_Sub"]</p>
+                <p class="mb-[18px] text-[0.84rem] text-muted">@L["AnimalDetail_About_Sub"]</p>
                 <p>@(string.IsNullOrWhiteSpace(animal.Description) ? L["AnimalDetail_NoDescription"].Value : animal.Description)</p>
             </div>
 
             <div class="card section-card">
-                <div class="section-head">
+                <div class="flex items-start justify-between gap-3">
                     <div>
                         <h3>@L["AnimalDetail_Status_Title"]</h3>
-                        <p class="sub">@L["AnimalDetail_Status_Sub"]</p>
+                        <p class="mb-3.5 text-[0.84rem] text-muted">@L["AnimalDetail_Status_Sub"]</p>
                     </div>
                     <AuthorizeView Roles="Admin,Staff">
                         @if (!_statusPanelOpen)
@@ -105,14 +105,14 @@ else if (_animal is { } animal)
                     </AuthorizeView>
                 </div>
 
-                <div class="status-now">
+                <div class="mb-4">
                     <span class="badge @AnimalDisplay.BadgeClass(animal.Status)">@AnimalDisplay.StatusLabel(L, animal.Status)</span>
                 </div>
 
                 <AuthorizeView Roles="Admin,Staff">
                     @if (_statusPanelOpen)
                     {
-                        <div class="inline-form">
+                        <div class="mb-[18px] rounded-field border border-border bg-surface-2 p-4">
                             @if (_statusError is not null)
                             {
                                 <div class="form-error" role="alert">@_statusError</div>
@@ -134,13 +134,13 @@ else if (_animal is { } animal)
                     }
                     else if (_statusTargets.Count == 0)
                     {
-                        <p class="muted small">@L["AnimalDetail_Status_NoMoves"]</p>
+                        <p class="text-[0.82rem] text-muted">@L["AnimalDetail_Status_NoMoves"]</p>
                     }
                 </AuthorizeView>
 
                 @if (_statusHistory.Count == 0)
                 {
-                    <p class="muted small">@L["AnimalDetail_Status_Empty"]</p>
+                    <p class="text-[0.82rem] text-muted">@L["AnimalDetail_Status_Empty"]</p>
                 }
                 else
                 {
@@ -158,10 +158,10 @@ else if (_animal is { } animal)
             </div>
 
             <div class="card section-card">
-                <div class="section-head">
+                <div class="flex items-start justify-between gap-3">
                     <div>
                         <h3>@L["AnimalDetail_Intake_Title"]</h3>
-                        <p class="sub">@L["AnimalDetail_Intake_Sub"]</p>
+                        <p class="mb-3.5 text-[0.84rem] text-muted">@L["AnimalDetail_Intake_Sub"]</p>
                     </div>
                     <AuthorizeView Roles="Admin,Staff">
                         @if (!_intakePanelOpen)
@@ -174,7 +174,7 @@ else if (_animal is { } animal)
                 <AuthorizeView Roles="Admin,Staff">
                     @if (_intakePanelOpen)
                     {
-                        <div class="inline-form">
+                        <div class="mb-[18px] rounded-field border border-border bg-surface-2 p-4">
                             @if (_intakeError is not null)
                             {
                                 <div class="form-error" role="alert">@_intakeError</div>
@@ -208,7 +208,7 @@ else if (_animal is { } animal)
 
                 @if (_intakeHistory.Count == 0)
                 {
-                    <p class="muted small">@L["AnimalDetail_Intake_Empty"]</p>
+                    <p class="text-[0.82rem] text-muted">@L["AnimalDetail_Intake_Empty"]</p>
                 }
                 else
                 {

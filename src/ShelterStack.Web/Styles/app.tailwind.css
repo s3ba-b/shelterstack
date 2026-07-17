@@ -1,0 +1,482 @@
+/* ============================================================
+   ShelterStack — staff web app stylesheet (Tailwind v4 source).
+   Compiled to wwwroot/app.css by the Tailwind standalone CLI
+   (MSBuild target on build/CI/aspire run; AppHost --watch sidecar
+   for the dev loop). Do not edit wwwroot/app.css — it is generated.
+
+   Design tokens below are THE source of truth. The design-reference
+   mock-ups in s3ba-b/open-shelter-mockups remain the *visual*
+   reference; keeping the two in sync is a manual step.
+   ============================================================ */
+
+@import "tailwindcss";
+
+/* Scan Razor markup and C# (AnimalDisplay emits status/thumb class
+   names) so utility classes used there are generated. */
+@source "../Components";
+@source "../Animals";
+
+/* =========================================================
+   DESIGN TOKENS — become CSS custom properties AND Tailwind
+   utilities (bg-*, text-*, border-*, rounded-*, shadow-*, font-*).
+   ========================================================= */
+@theme {
+  --color-bg: #f5f6f8;
+  --color-surface: #ffffff;
+  --color-surface-2: #f1f3f6;
+  --color-surface-3: #e9edf2;
+  --color-border: #e3e7ee;
+  --color-border-2: #d4dae3;
+
+  --color-text: #1b1f27;
+  --color-text-2: #4a5160;
+  --color-muted: #79818f;
+  --color-muted-2: #99a1ad;
+
+  --color-primary: #15976a;
+  --color-primary-700: #0f7a55;
+  --color-primary-soft: #e4f4ee;
+  --color-primary-ring: rgba(21, 151, 106, 0.18);
+
+  /* status palette */
+  --color-st-available: #15976a;
+  --color-st-available-bg: #e4f4ee;
+  --color-st-fostered: #2f74d0;
+  --color-st-fostered-bg: #e6f0fc;
+  --color-st-adopted: #7a5af0;
+  --color-st-adopted-bg: #efebfe;
+  --color-st-medical: #c97a13;
+  --color-st-medical-bg: #fbf0dd;
+  --color-st-quarantine: #cc4747;
+  --color-st-quarantine-bg: #fce8e8;
+
+  /* radii → rounded-card / rounded-field (pills use rounded-full) */
+  --radius-card: 12px;
+  --radius-field: 8px;
+
+  /* shadows → shadow-card / shadow-pop / shadow-modal */
+  --shadow-card: 0 1px 2px rgba(20, 26, 38, 0.06);
+  --shadow-pop: 0 4px 16px -6px rgba(20, 26, 38, 0.14);
+  --shadow-modal: 0 16px 40px -12px rgba(20, 26, 38, 0.22);
+
+  --font-sans:
+    "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
+/* =========================================================
+   BASE
+   ========================================================= */
+@layer base {
+  body {
+    background: var(--color-bg);
+    color: var(--color-text);
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    letter-spacing: -0.01em;
+  }
+
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+}
+
+/* =========================================================
+   COMPONENTS — the semantic, reused, or C#-selected classes
+   that stay as classes rather than inline utilities:
+   status badges + animal-thumb colors (chosen at runtime in
+   Animals/AnimalDisplay.cs), buttons, and the detail timeline.
+   ========================================================= */
+@layer components {
+  /* ---- surface card ---- */
+  .card {
+    @apply rounded-card border border-border bg-surface shadow-card;
+  }
+
+  /* ---- page header (title + subtitle + right-aligned actions) ---- */
+  .page-head {
+    @apply mb-6 flex flex-wrap items-start gap-5;
+  }
+  .page-head h1 {
+    @apply text-[1.6rem] font-bold;
+  }
+  .page-head p {
+    @apply mt-1 text-[0.92rem] text-muted;
+  }
+  .page-head .actions {
+    @apply ml-auto flex gap-2.5;
+  }
+
+  /* ---- section card (detail-page panels) ---- */
+  .section-card {
+    @apply mb-5 p-[22px];
+  }
+  .section-card h3 {
+    @apply mb-1 text-base;
+  }
+
+  /* ---- empty / error / forbidden state panels ---- */
+  .state-card {
+    @apply px-6 py-14 text-center;
+  }
+  .state-card .state-ico {
+    @apply text-[2.4rem] leading-none;
+  }
+  .state-card h3 {
+    @apply mt-3 text-[1.05rem];
+  }
+  .state-card p {
+    @apply mx-auto mt-1.5 max-w-[380px] text-[0.9rem] text-muted;
+  }
+  .state-card .actions {
+    @apply mt-5 inline-flex gap-2.5;
+  }
+
+  /* ---- forms (create/edit + inline panels). Kept as classes because the
+     inputs are rendered by Blazor's InputText/InputSelect/etc. and the field
+     system is reused across every form. ---- */
+  .form-card {
+    @apply max-w-[720px] p-6;
+  }
+  .form-grid {
+    @apply grid grid-cols-1 gap-x-[18px] sm:grid-cols-2;
+  }
+  .form-grid .full {
+    @apply sm:col-span-2;
+  }
+  .form-actions {
+    @apply mt-2 flex justify-end gap-2.5;
+  }
+  .form-error,
+  .auth-error {
+    @apply mb-[18px] rounded-field border border-st-quarantine bg-st-quarantine-bg px-[13px] py-2.5 text-[0.85rem] text-st-quarantine;
+  }
+  .field {
+    @apply mb-4;
+  }
+  .field label {
+    @apply mb-1.5 block text-[0.82rem] font-semibold text-text-2;
+  }
+  .field input,
+  .field select,
+  .field textarea {
+    @apply w-full rounded-field border border-border-2 bg-surface px-[13px] py-[11px] text-[0.92rem] text-text outline-none;
+    font-family: inherit;
+    transition:
+      border-color 0.15s,
+      box-shadow 0.15s;
+  }
+  .field input:focus,
+  .field select:focus,
+  .field textarea:focus {
+    @apply border-primary;
+    box-shadow: 0 0 0 3px var(--color-primary-ring);
+  }
+  .field textarea {
+    @apply min-h-[92px] resize-y;
+  }
+  .field .hint {
+    @apply mt-[5px] text-[0.74rem] text-muted;
+  }
+  .field .validation-message {
+    @apply mt-[5px] block text-[0.74rem] text-st-quarantine;
+  }
+
+  /* ---- buttons ---- */
+  .btn {
+    @apply inline-flex items-center gap-2 rounded-field border border-transparent px-4 py-[9px] text-[0.88rem] font-semibold;
+    transition:
+      background 0.15s,
+      border-color 0.15s,
+      transform 0.12s;
+  }
+  .btn:active {
+    @apply translate-y-px;
+  }
+  .btn svg {
+    @apply h-4 w-4;
+  }
+  .btn-primary {
+    @apply bg-primary text-white shadow-card;
+  }
+  .btn-primary:hover {
+    @apply bg-primary-700;
+  }
+  .btn-ghost {
+    @apply border-border-2 bg-surface text-text-2;
+  }
+  .btn-ghost:hover {
+    @apply bg-surface-2;
+  }
+  .btn-sm {
+    @apply px-[11px] py-[6px] text-[0.8rem];
+  }
+  .btn-block {
+    @apply mt-1.5 w-full justify-center py-3;
+  }
+
+  /* ---- status badges ---- */
+  .badge {
+    @apply inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2.5 py-[3px] text-[0.76rem] font-semibold;
+  }
+  .badge::before {
+    content: "";
+    @apply h-1.5 w-1.5 rounded-full bg-current;
+  }
+  .badge.available {
+    @apply bg-st-available-bg text-st-available;
+  }
+  .badge.fostered {
+    @apply bg-st-fostered-bg text-st-fostered;
+  }
+  .badge.adopted {
+    @apply bg-st-adopted-bg text-st-adopted;
+  }
+  .badge.medical {
+    @apply bg-st-medical-bg text-st-medical;
+  }
+  .badge.quarantine {
+    @apply bg-st-quarantine-bg text-st-quarantine;
+  }
+  .badge.neutral {
+    @apply bg-surface-3 text-text-2;
+  }
+
+  /* ---- animal-thumbnail background tints (species) ---- */
+  .t-dog {
+    @apply bg-st-medical-bg;
+  }
+  .t-cat {
+    @apply bg-st-fostered-bg;
+  }
+  .t-rabbit {
+    @apply bg-st-adopted-bg;
+  }
+  .t-other {
+    @apply bg-surface-3;
+  }
+
+  /* ---- intake / status timeline (AnimalDetail) ---- */
+  .timeline {
+    @apply relative m-0 list-none p-0;
+  }
+  .timeline::before {
+    content: "";
+    @apply absolute left-[13px] top-1.5 bottom-1.5 w-0.5 bg-border;
+  }
+  .timeline li {
+    @apply relative pb-[22px] pl-10;
+  }
+  .timeline li:last-child {
+    @apply pb-0;
+  }
+  .timeline .tl-dot {
+    @apply absolute left-[5px] top-0.5 grid h-[18px] w-[18px] place-items-center rounded-full border-2 border-border-2 bg-surface;
+  }
+  .timeline .tl-dot.done {
+    @apply border-primary bg-primary-soft;
+  }
+  .timeline .tl-dot.done::after {
+    content: "";
+    @apply h-[7px] w-[7px] rounded-full bg-primary;
+  }
+  .timeline .tl-dot.medical {
+    @apply border-st-medical bg-st-medical-bg;
+  }
+  .timeline .tl-when {
+    @apply text-[0.76rem] font-medium text-muted;
+  }
+  .timeline .tl-what {
+    @apply my-px text-[0.9rem] font-semibold;
+  }
+  .timeline .tl-who {
+    @apply text-[0.82rem] text-muted;
+  }
+}
+
+/* =========================================================
+   FRAMEWORK-DRIVEN CSS — plain rules (not utilities) because
+   Blazor's runtime toggles ancestor classes/state that utility
+   classes can't express. Relocated verbatim from the retired
+   MainLayout.razor.css and ReconnectModal.razor.css.
+   ========================================================= */
+#blazor-error-ui {
+  color-scheme: light only;
+  background: lightyellow;
+  bottom: 0;
+  box-shadow: 0 -1px 2px rgba(0, 0, 0, 0.2);
+  box-sizing: border-box;
+  display: none;
+  left: 0;
+  padding: 0.6rem 1.25rem 0.7rem 1.25rem;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#blazor-error-ui .dismiss {
+  cursor: pointer;
+  position: absolute;
+  right: 0.75rem;
+  top: 0.5rem;
+}
+
+.components-reconnect-first-attempt-visible,
+.components-reconnect-repeated-attempt-visible,
+.components-reconnect-failed-visible,
+.components-pause-visible,
+.components-resume-failed-visible,
+.components-rejoining-animation {
+  display: none;
+}
+
+#components-reconnect-modal.components-reconnect-show .components-reconnect-first-attempt-visible,
+#components-reconnect-modal.components-reconnect-show .components-rejoining-animation,
+#components-reconnect-modal.components-reconnect-paused .components-pause-visible,
+#components-reconnect-modal.components-reconnect-resume-failed .components-resume-failed-visible,
+#components-reconnect-modal.components-reconnect-retrying,
+#components-reconnect-modal.components-reconnect-retrying .components-reconnect-repeated-attempt-visible,
+#components-reconnect-modal.components-reconnect-retrying .components-rejoining-animation,
+#components-reconnect-modal.components-reconnect-failed,
+#components-reconnect-modal.components-reconnect-failed .components-reconnect-failed-visible {
+  display: block;
+}
+
+#components-reconnect-modal {
+  background-color: white;
+  width: 20rem;
+  margin: 20vh auto;
+  padding: 2rem;
+  border: 0;
+  border-radius: 0.5rem;
+  box-shadow: 0 3px 6px 2px rgba(0, 0, 0, 0.3);
+  opacity: 0;
+  transition:
+    display 0.5s allow-discrete,
+    overlay 0.5s allow-discrete;
+  animation: components-reconnect-modal-fadeOutOpacity 0.5s both;
+}
+
+#components-reconnect-modal[open] {
+  animation:
+    components-reconnect-modal-slideUp 1.5s cubic-bezier(0.05, 0.89, 0.25, 1.02) 0.3s,
+    components-reconnect-modal-fadeInOpacity 0.5s ease-in-out 0.3s;
+  animation-fill-mode: both;
+}
+
+#components-reconnect-modal::backdrop {
+  background-color: rgba(0, 0, 0, 0.4);
+  animation: components-reconnect-modal-fadeInOpacity 0.5s ease-in-out;
+  opacity: 1;
+}
+
+@keyframes components-reconnect-modal-slideUp {
+  0% {
+    transform: translateY(30px) scale(0.95);
+  }
+  100% {
+    transform: translateY(0);
+  }
+}
+
+@keyframes components-reconnect-modal-fadeInOpacity {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+
+@keyframes components-reconnect-modal-fadeOutOpacity {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+.components-reconnect-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+}
+
+#components-reconnect-modal p {
+  margin: 0;
+  text-align: center;
+}
+
+#components-reconnect-modal button {
+  border: 0;
+  background-color: #6b9ed2;
+  color: white;
+  padding: 4px 24px;
+  border-radius: 4px;
+}
+
+#components-reconnect-modal button:hover {
+  background-color: #3b6ea2;
+}
+
+#components-reconnect-modal button:active {
+  background-color: #6b9ed2;
+}
+
+.components-rejoining-animation {
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.components-rejoining-animation div {
+  position: absolute;
+  border: 3px solid #0087ff;
+  opacity: 1;
+  border-radius: 50%;
+  animation: components-rejoining-animation 1.5s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.components-rejoining-animation div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+
+@keyframes components-rejoining-animation {
+  0% {
+    top: 40px;
+    left: 40px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  4.9% {
+    top: 40px;
+    left: 40px;
+    width: 0;
+    height: 0;
+    opacity: 0;
+  }
+  5% {
+    top: 40px;
+    left: 40px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 80px;
+    height: 80px;
+    opacity: 0;
+  }
+}

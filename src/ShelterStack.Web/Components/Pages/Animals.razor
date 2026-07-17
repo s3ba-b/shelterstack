@@ -26,7 +26,7 @@
 @if (_state == LoadState.Loading)
 {
     <div class="card state-card">
-        <p class="muted">@L["Common_Loading"]</p>
+        <p class="text-muted">@L["Common_Loading"]</p>
     </div>
 }
 else if (_state == LoadState.Forbidden)
@@ -63,22 +63,22 @@ else if (_animals.Count == 0)
 }
 else
 {
-    <div class="toolbar">
-        <button class="chip-filter @(_filter is null ? "active" : "")" @onclick="() => SetFilter(null)">
-            @L["Animals_Filter_All"] <span class="n">@_animals.Count</span>
+    <div class="mb-4 flex flex-wrap items-center gap-2.5">
+        <button class="@ChipClass(_filter is null)" @onclick="() => SetFilter(null)">
+            @L["Animals_Filter_All"] <span class="opacity-60">@_animals.Count</span>
         </button>
         @foreach (var status in _statusesPresent)
         {
-            <button class="chip-filter @(_filter == status ? "active" : "")" @onclick="() => SetFilter(status)">
-                @AnimalDisplay.StatusLabel(L, status) <span class="n">@CountOf(status)</span>
+            <button class="@ChipClass(_filter == status)" @onclick="() => SetFilter(status)">
+                @AnimalDisplay.StatusLabel(L, status) <span class="opacity-60">@CountOf(status)</span>
             </button>
         }
     </div>
 
-    <div class="card table-wrap">
-        <table class="tbl">
+    <div class="card overflow-hidden">
+        <table class="w-full border-collapse text-[0.88rem]">
             <thead>
-                <tr>
+                <tr class="[&>th]:border-b [&>th]:border-border [&>th]:bg-surface-2 [&>th]:px-[18px] [&>th]:py-3 [&>th]:text-left [&>th]:text-[0.72rem] [&>th]:font-bold [&>th]:uppercase [&>th]:tracking-[0.04em] [&>th]:text-muted">
                     <th>@L["Animals_Col_Animal"]</th>
                     <th>@L["Animals_Col_Species"]</th>
                     <th>@L["Animals_Col_Sex"]</th>
@@ -86,28 +86,28 @@ else
                     <th>@L["Animals_Col_Status"]</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody class="[&>tr:last-child>td]:border-b-0">
                 @foreach (var animal in Filtered())
                 {
-                    <tr @onclick="() => OpenAnimal(animal.Id)">
+                    <tr class="cursor-pointer transition-colors hover:bg-surface-2 [&>td]:border-b [&>td]:border-border [&>td]:px-[18px] [&>td]:py-[13px] [&>td]:align-middle [&>td]:text-text-2" @onclick="() => OpenAnimal(animal.Id)">
                         <td>
-                            <div class="cell-animal">
-                                <span class="thumb @AnimalDisplay.ThumbClass(animal.Species)">@AnimalDisplay.Emoji(animal.Species)</span>
+                            <div class="flex items-center gap-3">
+                                <span class="grid h-[38px] w-[38px] flex-shrink-0 place-items-center rounded-[9px] object-cover text-[1.1rem] @AnimalDisplay.ThumbClass(animal.Species)">@AnimalDisplay.Emoji(animal.Species)</span>
                                 <span>
-                                    <b>@animal.Name</b>
-                                    <small>@(string.IsNullOrWhiteSpace(animal.Breed) ? AnimalDisplay.SpeciesLabel(L, animal.Species) : animal.Breed)</small>
+                                    <b class="block font-semibold text-text">@animal.Name</b>
+                                    <small class="text-[0.78rem] text-muted">@(string.IsNullOrWhiteSpace(animal.Breed) ? AnimalDisplay.SpeciesLabel(L, animal.Species) : animal.Breed)</small>
                                 </span>
                             </div>
                         </td>
                         <td>@AnimalDisplay.SpeciesLabel(L, animal.Species)</td>
                         <td>@AnimalDisplay.SexLabel(L, animal.Sex)</td>
-                        <td class="muted">@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</td>
+                        <td class="!text-muted">@AnimalDisplay.Age(L, animal.DateOfBirth, _today)</td>
                         <td><span class="badge @AnimalDisplay.BadgeClass(animal.Status)">@AnimalDisplay.StatusLabel(L, animal.Status)</span></td>
                     </tr>
                 }
             </tbody>
         </table>
-        <div class="table-foot">
+        <div class="flex items-center justify-between border-t border-border px-[18px] py-3 text-[0.82rem] text-muted">
             <span>@L["Animals_Total", _animals.Count]</span>
         </div>
     </div>
@@ -162,6 +162,11 @@ else
         ];
         _state = LoadState.Ready;
     }
+
+    // Filter chip styling; the selected chip inverts to the solid dark treatment.
+    private static string ChipClass(bool active) =>
+        "inline-flex items-center gap-[7px] rounded-full border px-[13px] py-1.5 text-[0.82rem] font-medium "
+        + (active ? "border-text bg-text text-white" : "border-border bg-surface text-text-2");
 
     private void SetFilter(AnimalStatus? status) => _filter = status;
 

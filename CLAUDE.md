@@ -22,14 +22,28 @@ constraints, and licensing rationale live in the project charter
 - A staff-facing frontend is in scope: a Blazor web app (`src/ShelterStack.Web`,
   .NET 10, Aspire-orchestrated). Don't treat the frontend as out of scope — only
   the public-facing adopter portal and mobile apps remain excluded.
-- The Web app's UI has a non-binding design reference: static HTML/CSS mock-ups
-  (login, overview dashboard, animals list, animal detail, M4 adoptions preview)
-  live in the separate, private `s3ba-b/open-shelter-mockups` repo — clone it
-  (`gh repo clone s3ba-b/open-shelter-mockups`) and port its markup/`app.css`
-  design tokens (teal/green theme, sidebar with org switcher, nav groups, badges,
-  timeline, etc.) rather than inventing new styling. The landing page's "design
-  preview" gallery (`docs/images/preview/`) is sourced from screenshots of these
-  same mock-ups (see issue #28).
+- The Web app is styled with **Tailwind CSS v4** (see the styling note below). The
+  UI has a non-binding *visual* design reference: static HTML/CSS mock-ups (login,
+  overview dashboard, animals list, animal detail, M4 adoptions preview) live in
+  the separate, private `s3ba-b/open-shelter-mockups` repo — clone it
+  (`gh repo clone s3ba-b/open-shelter-mockups`) and reproduce its look (teal/green
+  theme, sidebar with org switcher, nav groups, badges, timeline, etc.). The
+  mock-ups are the visual reference only; the design **tokens** now live in
+  `src/ShelterStack.Web/Styles/app.tailwind.css` (`@theme`), so keeping the two in
+  sync as the mock-ups evolve is a manual step, not a copy of their `app.css`. The
+  landing page's "design preview" gallery (`docs/images/preview/`) is sourced from
+  screenshots of these same mock-ups (see issue #28).
+- Frontend styling — **Tailwind CSS v4 via the standalone CLI (no Node/npm)**.
+  `src/ShelterStack.Web/Styles/app.tailwind.css` is the source: `@theme` holds the
+  design tokens (the source of truth), a small `@layer components` set carries the
+  reused/C#-selected primitives (`.card`, `.btn*`, `.badge*`, `.field`, `.timeline`,
+  status/thumb classes, etc.), and page/layout composition uses utility classes
+  inline in the `.razor` files. It compiles to `wwwroot/app.css` (generated,
+  gitignored — never edit by hand). The pinned CLI binary (`TailwindVersion` in
+  `ShelterStack.Web.csproj`) is auto-downloaded per-OS/arch into a gitignored `obj/`
+  cache on first build; a build-time binary to pin/vendor is the cost of this
+  choice, and it must stay restorable in CI and any future devcontainer (see #25).
+  There are **no** scoped `.razor.css` files — Tailwind is the single styling system.
 - Docker Compose is the primary deployment target; Azure Container Apps (`azd`)
   is an optional, documented secondary path.
 
@@ -39,6 +53,12 @@ constraints, and licensing rationale live in the project charter
 - Run the whole app (orchestrated): `aspire run` from `src/ShelterStack.AppHost`
   — don't `dotnet run` individual services; Aspire wires their dependencies and
   configuration.
+- Web CSS is generated, not hand-written: `dotnet build` (and therefore CI and
+  `aspire run`) runs the Tailwind CLI as an MSBuild target, producing
+  `src/ShelterStack.Web/wwwroot/app.css` from `Styles/app.tailwind.css` with no
+  extra step. For the dev loop, `aspire run` also starts a Tailwind `--watch`
+  sidecar (run mode only) so edits to markup/tokens regenerate the CSS live. Edit
+  `Styles/app.tailwind.css`, never the generated `wwwroot/app.css`.
 - Format (CI gate): `dotnet csharpier .` — this repo uses CSharpier, not
   `dotnet format`.
 - EF Core migrations live per service: each service owns its `DbContext` under
@@ -85,6 +105,13 @@ Match the existing code:
   over `ITenantContext` (see the tenant-isolation rule above).
 - Write explicit mappings between entities and contracts — no AutoMapper.
 - Minimal APIs (`app.MapGet`/`MapPost`) for endpoints; keep them thin.
+- Web styling is Tailwind CSS utilities inline in `.razor` markup, over the
+  tokens in `Styles/app.tailwind.css`. Reach for a `@theme` token
+  (`bg-surface`, `text-muted`, `rounded-card`, status/thumb colors, …) rather
+  than a hard-coded hex. Add a class to the `@layer components` set only when a
+  pattern is genuinely reused across pages or is selected in C# (as the status
+  badges are); one-off page layout stays inline. Do **not** add scoped
+  `.razor.css` files — Tailwind is the only styling system.
 
 Don't introduce Mediator/CQRS, FluentValidation, a `Result<T>` flow-control
 pattern, Scalar, or FluentAssertions on a whim — none are in use today, so
