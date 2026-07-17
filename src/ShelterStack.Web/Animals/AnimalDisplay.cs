@@ -50,6 +50,14 @@ public static class AnimalDisplay
     public static string StatusLabel(IStringLocalizer localizer, AnimalStatus status) =>
         localizer[$"Status_{status}"];
 
+    public static string IntakeTypeLabel(IStringLocalizer localizer, IntakeType type) =>
+        localizer[$"IntakeType_{type}"];
+
+    /// <summary>The timeline dot modifier for a status entry, reusing the same palette cue as the
+    /// status badge: a medical hold reads as a caution dot, everything else as a "done" step.</summary>
+    public static string TimelineDotClass(AnimalStatus status) =>
+        status == AnimalStatus.MedicalHold ? "medical" : "done";
+
     /// <summary>A coarse age label ("2 yr", "8 mo") derived from the date of birth, deliberately
     /// avoiding grammatical plurals so both languages read correctly with an abbreviated unit.</summary>
     public static string Age(IStringLocalizer localizer, DateOnly? dateOfBirth, DateOnly today)

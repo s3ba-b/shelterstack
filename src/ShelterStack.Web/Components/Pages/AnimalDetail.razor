@@ -92,8 +92,141 @@ else if (_animal is { } animal)
             </div>
 
             <div class="card section-card">
-                <h3>@L["AnimalDetail_History_Title"]</h3>
-                <p class="sub">@L["AnimalDetail_History_Sub"]</p>
+                <div class="section-head">
+                    <div>
+                        <h3>@L["AnimalDetail_Status_Title"]</h3>
+                        <p class="sub">@L["AnimalDetail_Status_Sub"]</p>
+                    </div>
+                    <AuthorizeView Roles="Admin,Staff">
+                        @if (!_statusPanelOpen)
+                        {
+                            <button class="btn btn-ghost" @onclick="OpenStatusPanel" disabled="@(_statusTargets.Count == 0)">@L["AnimalDetail_Status_Change"]</button>
+                        }
+                    </AuthorizeView>
+                </div>
+
+                <div class="status-now">
+                    <span class="badge @AnimalDisplay.BadgeClass(animal.Status)">@AnimalDisplay.StatusLabel(L, animal.Status)</span>
+                </div>
+
+                <AuthorizeView Roles="Admin,Staff">
+                    @if (_statusPanelOpen)
+                    {
+                        <div class="inline-form">
+                            @if (_statusError is not null)
+                            {
+                                <div class="form-error" role="alert">@_statusError</div>
+                            }
+                            <div class="field">
+                                <label for="new-status">@L["AnimalDetail_Status_NewLabel"]</label>
+                                <select id="new-status" @bind="_statusTarget">
+                                    @foreach (var target in _statusTargets)
+                                    {
+                                        <option value="@target">@AnimalDisplay.StatusLabel(L, target)</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-ghost" @onclick="CloseStatusPanel" disabled="@_statusBusy">@L["AnimalForm_Cancel"]</button>
+                                <button class="btn btn-primary" @onclick="ChangeStatusAsync" disabled="@_statusBusy">@(_statusBusy ? L["AnimalForm_Saving"].Value : L["AnimalDetail_Status_Save"].Value)</button>
+                            </div>
+                        </div>
+                    }
+                    else if (_statusTargets.Count == 0)
+                    {
+                        <p class="muted small">@L["AnimalDetail_Status_NoMoves"]</p>
+                    }
+                </AuthorizeView>
+
+                @if (_statusHistory.Count == 0)
+                {
+                    <p class="muted small">@L["AnimalDetail_Status_Empty"]</p>
+                }
+                else
+                {
+                    <ul class="timeline">
+                        @foreach (var entry in _statusHistory)
+                        {
+                            <li>
+                                <span class="tl-dot @AnimalDisplay.TimelineDotClass(entry.Status)"></span>
+                                <div class="tl-when">@entry.ChangedAtUtc.LocalDateTime.ToString("g", CultureInfo.CurrentUICulture)</div>
+                                <div class="tl-what">@AnimalDisplay.StatusLabel(L, entry.Status)</div>
+                            </li>
+                        }
+                    </ul>
+                }
+            </div>
+
+            <div class="card section-card">
+                <div class="section-head">
+                    <div>
+                        <h3>@L["AnimalDetail_Intake_Title"]</h3>
+                        <p class="sub">@L["AnimalDetail_Intake_Sub"]</p>
+                    </div>
+                    <AuthorizeView Roles="Admin,Staff">
+                        @if (!_intakePanelOpen)
+                        {
+                            <button class="btn btn-ghost" @onclick="OpenIntakePanel">@L["AnimalDetail_Intake_Record"]</button>
+                        }
+                    </AuthorizeView>
+                </div>
+
+                <AuthorizeView Roles="Admin,Staff">
+                    @if (_intakePanelOpen)
+                    {
+                        <div class="inline-form">
+                            @if (_intakeError is not null)
+                            {
+                                <div class="form-error" role="alert">@_intakeError</div>
+                            }
+                            <div class="form-grid">
+                                <div class="field">
+                                    <label for="intake-date">@L["AnimalDetail_Intake_Date"]</label>
+                                    <input type="date" id="intake-date" max="@_todayIso" @bind="_intakeDate" />
+                                </div>
+                                <div class="field">
+                                    <label for="intake-type">@L["AnimalDetail_Intake_Type"]</label>
+                                    <select id="intake-type" @bind="_intakeType">
+                                        @foreach (var type in Enum.GetValues<IntakeType>())
+                                        {
+                                            <option value="@type">@AnimalDisplay.IntakeTypeLabel(L, type)</option>
+                                        }
+                                    </select>
+                                </div>
+                                <div class="field full">
+                                    <label for="intake-notes">@L["AnimalDetail_Intake_Notes"]</label>
+                                    <textarea id="intake-notes" @bind="_intakeNotes" placeholder="@L["AnimalDetail_Intake_Notes_Placeholder"]"></textarea>
+                                </div>
+                            </div>
+                            <div class="form-actions">
+                                <button class="btn btn-ghost" @onclick="CloseIntakePanel" disabled="@_intakeBusy">@L["AnimalForm_Cancel"]</button>
+                                <button class="btn btn-primary" @onclick="RecordIntakeAsync" disabled="@_intakeBusy">@(_intakeBusy ? L["AnimalForm_Saving"].Value : L["AnimalDetail_Intake_Save"].Value)</button>
+                            </div>
+                        </div>
+                    }
+                </AuthorizeView>
+
+                @if (_intakeHistory.Count == 0)
+                {
+                    <p class="muted small">@L["AnimalDetail_Intake_Empty"]</p>
+                }
+                else
+                {
+                    <ul class="timeline">
+                        @foreach (var record in _intakeHistory)
+                        {
+                            <li>
+                                <span class="tl-dot done"></span>
+                                <div class="tl-when">@record.IntakeDate.ToString("d", CultureInfo.CurrentUICulture)</div>
+                                <div class="tl-what">@AnimalDisplay.IntakeTypeLabel(L, record.IntakeType)</div>
+                                @if (!string.IsNullOrWhiteSpace(record.Notes))
+                                {
+                                    <div class="tl-who">@record.Notes</div>
+                                }
+                            </li>
+                        }
+                    </ul>
+                }
             </div>
         </div>
     </div>
@@ -113,14 +246,43 @@ else if (_animal is { } animal)
     public Guid Id { get; set; }
 
     private readonly DateOnly _today = DateOnly.FromDateTime(DateTime.Today);
+
+    // ISO date so the native date picker caps intake dates at today — an intake can't be recorded
+    // in the future.
+    private readonly string _todayIso = DateOnly.FromDateTime(DateTime.Today).ToString("yyyy-MM-dd");
+
     private LoadState _state = LoadState.Loading;
     private AnimalResponse? _animal;
+
+    // Histories are held newest-first for the timeline; the API returns them oldest-first.
+    private IReadOnlyList<AnimalStatusHistoryResponse> _statusHistory = [];
+    private IReadOnlyList<IntakeRecordResponse> _intakeHistory = [];
+
+    // The legal target statuses from the animal's current one, mirroring the API's policy so the
+    // "change status" control only offers moves the backend will accept.
+    private IReadOnlyList<AnimalStatus> _statusTargets = [];
+
+    private bool _statusPanelOpen;
+    private bool _statusBusy;
+    private string? _statusError;
+    private AnimalStatus _statusTarget;
+
+    private bool _intakePanelOpen;
+    private bool _intakeBusy;
+    private string? _intakeError;
+    private DateOnly _intakeDate = DateOnly.FromDateTime(DateTime.Today);
+    private IntakeType _intakeType = IntakeType.Stray;
+    private string? _intakeNotes;
 
     protected override Task OnParametersSetAsync() => LoadAsync();
 
     private async Task LoadAsync()
     {
         _state = LoadState.Loading;
+        _statusPanelOpen = false;
+        _intakePanelOpen = false;
+        _statusError = null;
+        _intakeError = null;
 
         using var response = await Gateway.GetAsync($"/animals/{Id}", CancellationToken.None);
 
@@ -132,13 +294,156 @@ else if (_animal is { } animal)
             _ => LoadState.Error,
         };
 
-        if (_state == LoadState.Ready)
+        if (_state != LoadState.Ready)
+        {
+            return;
+        }
+
+        _animal = await response.Content.ReadFromJsonAsync<AnimalResponse>(
+            GatewayJson.Options,
+            CancellationToken.None
+        );
+
+        if (_animal is null)
+        {
+            _state = LoadState.Error;
+            return;
+        }
+
+        _statusTargets = AnimalStatusTransitions.TargetsFrom(_animal.Status);
+        await LoadHistoriesAsync();
+    }
+
+    // Load both histories after the animal is known to exist. The Animal lookup upstream means a
+    // cross-tenant / missing id already resolved to NotFound, so these calls succeed for the
+    // caller's own animal and simply come back empty when there is nothing recorded yet.
+    private async Task LoadHistoriesAsync()
+    {
+        var statusTask = Gateway.GetAsync($"/animals/{Id}/status-history", CancellationToken.None);
+        var intakeTask = Gateway.GetAsync($"/animals/{Id}/intake-history", CancellationToken.None);
+        await Task.WhenAll(statusTask, intakeTask);
+
+        using var statusResponse = await statusTask;
+        if (statusResponse.IsSuccessStatusCode)
+        {
+            var history = await statusResponse.Content.ReadFromJsonAsync<
+                List<AnimalStatusHistoryResponse>
+            >(GatewayJson.Options, CancellationToken.None);
+            _statusHistory =
+                history?.OrderByDescending(h => h.ChangedAtUtc).ToList()
+                ?? (IReadOnlyList<AnimalStatusHistoryResponse>)[];
+        }
+
+        using var intakeResponse = await intakeTask;
+        if (intakeResponse.IsSuccessStatusCode)
+        {
+            var history = await intakeResponse.Content.ReadFromJsonAsync<List<IntakeRecordResponse>>(
+                GatewayJson.Options,
+                CancellationToken.None
+            );
+            _intakeHistory =
+                history?.OrderByDescending(r => r.IntakeDate).ToList()
+                ?? (IReadOnlyList<IntakeRecordResponse>)[];
+        }
+    }
+
+    private void OpenStatusPanel()
+    {
+        _statusError = null;
+        _statusTarget = _statusTargets.Count > 0 ? _statusTargets[0] : default;
+        _statusPanelOpen = true;
+    }
+
+    private void CloseStatusPanel()
+    {
+        _statusPanelOpen = false;
+        _statusError = null;
+    }
+
+    private async Task ChangeStatusAsync()
+    {
+        _statusBusy = true;
+        _statusError = null;
+
+        using var response = await Gateway.SendJsonAsync(
+            HttpMethod.Post,
+            $"/animals/{Id}/status",
+            new ChangeAnimalStatusRequest(_statusTarget),
+            CancellationToken.None
+        );
+
+        if (response.IsSuccessStatusCode)
         {
             _animal = await response.Content.ReadFromJsonAsync<AnimalResponse>(
                 GatewayJson.Options,
                 CancellationToken.None
             );
+            _statusTargets =
+                _animal is { } a ? AnimalStatusTransitions.TargetsFrom(a.Status) : [];
+            _statusPanelOpen = false;
+            await LoadHistoriesAsync();
+            _statusBusy = false;
+            return;
         }
+
+        // A 400 means the move was rejected by the API's transition policy (e.g. the animal's
+        // status changed underneath us) — surface it as a clear message, never a crash.
+        _statusError = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.BadRequest => L["AnimalDetail_Status_Error_Illegal"],
+            System.Net.HttpStatusCode.Forbidden => L["AnimalForm_Error_Forbidden"],
+            _ => L["AnimalForm_Error_Generic"],
+        };
+        _statusBusy = false;
+    }
+
+    private void OpenIntakePanel()
+    {
+        _intakeError = null;
+        _intakeDate = _today;
+        _intakeType = IntakeType.Stray;
+        _intakeNotes = null;
+        _intakePanelOpen = true;
+    }
+
+    private void CloseIntakePanel()
+    {
+        _intakePanelOpen = false;
+        _intakeError = null;
+    }
+
+    private async Task RecordIntakeAsync()
+    {
+        _intakeBusy = true;
+        _intakeError = null;
+
+        var request = new CreateIntakeRecordRequest(
+            _intakeDate,
+            _intakeType,
+            string.IsNullOrWhiteSpace(_intakeNotes) ? null : _intakeNotes.Trim()
+        );
+
+        using var response = await Gateway.SendJsonAsync(
+            HttpMethod.Post,
+            $"/animals/{Id}/intake",
+            request,
+            CancellationToken.None
+        );
+
+        if (response.IsSuccessStatusCode)
+        {
+            _intakePanelOpen = false;
+            await LoadHistoriesAsync();
+            _intakeBusy = false;
+            return;
+        }
+
+        _intakeError = response.StatusCode switch
+        {
+            System.Net.HttpStatusCode.Forbidden => L["AnimalForm_Error_Forbidden"],
+            _ => L["AnimalForm_Error_Generic"],
+        };
+        _intakeBusy = false;
     }
 
     // "Dog · Labrador mix · Male · 2 yr", skipping the breed when it isn't recorded.

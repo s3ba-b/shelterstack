@@ -255,6 +255,16 @@ table.tbl { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
 .section-card h3 { font-size: 1rem; margin-bottom: 4px; }
 .section-card .sub { color: var(--muted); font-size: 0.84rem; margin-bottom: 18px; }
 
+/* section header with a right-aligned action (change status, record intake) */
+.section-head { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; }
+.section-head .sub { margin-bottom: 14px; }
+.status-now { margin-bottom: 16px; }
+
+/* an inline mini-form revealed inside a section card (status change, intake) */
+.inline-form { padding: 16px; margin-bottom: 18px; border: 1px solid var(--border); border-radius: var(--radius-sm); background: var(--surface-2, var(--surface)); }
+.inline-form .form-actions { margin-top: 4px; }
+.small { font-size: 0.82rem; }
+
 /* timeline */
 .timeline { list-style: none; margin: 0; padding: 0; position: relative; }
 .timeline::before { content: ""; position: absolute; left: 13px; top: 6px; bottom: 6px; width: 2px; background: var(--border); }
