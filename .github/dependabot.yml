@@ -10,3 +10,21 @@ updates:
     schedule:
       interval: "weekly"
     open-pull-requests-limit: 10
+    # Versions are managed centrally in Directory.Packages.props. These groups keep
+    # families that must move together in a single PR — a lone bump of, say,
+    # Microsoft.EntityFrameworkCore without .Relational reintroduces the version
+    # skew that caused the MSB3277 conflicts of #107.
+    groups:
+      entity-framework-core:
+        patterns:
+          - "Microsoft.EntityFrameworkCore*"
+          - "Npgsql.EntityFrameworkCore.PostgreSQL"
+      aspire:
+        patterns:
+          - "Aspire.*"
+      opentelemetry:
+        patterns:
+          - "OpenTelemetry.*"
+      xunit:
+        patterns:
+          - "xunit*"
