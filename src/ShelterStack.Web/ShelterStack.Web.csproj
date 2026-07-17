@@ -18,4 +18,74 @@
   <ItemGroup>
     <ProjectReference Include="..\ShelterStack.ServiceDefaults\ShelterStack.ServiceDefaults.csproj" />
   </ItemGroup>
+
+  <!--
+    Tailwind CSS via the standalone CLI (no Node/npm). The pinned binary is
+    downloaded per-OS/arch into a gitignored cache on first build; CSS is then
+    generated from Styles/app.tailwind.css into wwwroot/app.css as part of the
+    build (so `dotnet build`, CI, and `aspire run` need no extra step). The dev
+    live-reload loop is the AppHost Tailwind watch sidecar (see AppHost.cs).
+  -->
+  <PropertyGroup>
+    <TailwindVersion>4.3.3</TailwindVersion>
+    <TailwindInput>$(MSBuildProjectDirectory)/Styles/app.tailwind.css</TailwindInput>
+    <TailwindOutput>$(MSBuildProjectDirectory)/wwwroot/app.css</TailwindOutput>
+    <TailwindMinify Condition="'$(Configuration)' == 'Release'">--minify</TailwindMinify>
+  </PropertyGroup>
+
+  <!--
+    Resolve the OS/arch-specific asset and the gitignored cache path. This runs as
+    a target (not a top-level PropertyGroup) because $(IntermediateOutputPath) is
+    only set by the SDK targets, after project-body properties are evaluated.
+  -->
+  <Target Name="_ResolveTailwindPaths">
+    <PropertyGroup>
+      <_TailwindArch
+        Condition="'$([System.Runtime.InteropServices.RuntimeInformation]::OSArchitecture)' == 'Arm64'"
+        >arm64</_TailwindArch>
+      <_TailwindArch Condition="'$(_TailwindArch)' == ''">x64</_TailwindArch>
+      <_TailwindOs Condition="$([MSBuild]::IsOSPlatform('Windows'))">windows</_TailwindOs>
+      <_TailwindOs Condition="$([MSBuild]::IsOSPlatform('OSX'))">macos</_TailwindOs>
+      <_TailwindOs Condition="$([MSBuild]::IsOSPlatform('Linux'))">linux</_TailwindOs>
+      <_TailwindExt Condition="$([MSBuild]::IsOSPlatform('Windows'))">.exe</_TailwindExt>
+      <_TailwindAsset>tailwindcss-$(_TailwindOs)-$(_TailwindArch)$(_TailwindExt)</_TailwindAsset>
+      <_TailwindBinName>tailwindcss-$(TailwindVersion)-$(_TailwindOs)-$(_TailwindArch)$(_TailwindExt)</_TailwindBinName>
+      <_TailwindDir>$(IntermediateOutputPath)tailwind\</_TailwindDir>
+      <_TailwindBin>$(_TailwindDir)$(_TailwindBinName)</_TailwindBin>
+      <_TailwindUrl>https://github.com/tailwindlabs/tailwindcss/releases/download/v$(TailwindVersion)/$(_TailwindAsset)</_TailwindUrl>
+    </PropertyGroup>
+  </Target>
+
+  <Target
+    Name="RestoreTailwind"
+    DependsOnTargets="_ResolveTailwindPaths"
+    Condition="!Exists('$(_TailwindBin)')"
+  >
+    <MakeDir Directories="$(_TailwindDir)" />
+    <Message
+      Importance="high"
+      Text="Downloading Tailwind CSS CLI v$(TailwindVersion) ($(_TailwindAsset))..."
+    />
+    <DownloadFile
+      SourceUrl="$(_TailwindUrl)"
+      DestinationFolder="$(_TailwindDir)"
+      DestinationFileName="$(_TailwindBinName)"
+      Retries="3"
+    />
+    <Exec
+      Condition="!$([MSBuild]::IsOSPlatform('Windows'))"
+      Command="chmod +x &quot;$(_TailwindBin)&quot;"
+    />
+  </Target>
+
+  <Target
+    Name="BuildTailwind"
+    DependsOnTargets="_ResolveTailwindPaths;RestoreTailwind"
+    BeforeTargets="Compile"
+    Inputs="$(TailwindInput);$(MSBuildProjectFullPath);$(MSBuildProjectDirectory)\Components\**\*.razor;$(MSBuildProjectDirectory)\Components\**\*.cs;$(MSBuildProjectDirectory)\Animals\**\*.cs"
+    Outputs="$(TailwindOutput)"
+  >
+    <Message Importance="high" Text="Generating $(TailwindOutput) with Tailwind CSS..." />
+    <Exec Command="&quot;$(_TailwindBin)&quot; -i &quot;$(TailwindInput)&quot; -o &quot;$(TailwindOutput)&quot; $(TailwindMinify)" />
+  </Target>
 </Project>

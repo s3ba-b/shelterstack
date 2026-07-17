@@ -432,3 +432,8 @@ FodyWeavers.xsd
 # Derived, point-in-time index built per clone with `codegraph init` — like bin/obj,
 # not for committing.
 .codegraph/
+
+# Tailwind CSS output, generated from Styles/app.tailwind.css by the standalone
+# CLI on build (see ShelterStack.Web.csproj). The pinned CLI binary is cached
+# under obj/ (already ignored). Source of truth is the .tailwind.css input.
+src/ShelterStack.Web/wwwroot/app.css

@@ -2,7 +2,8 @@
 @inject NavigationManager Navigation
 @using System.Globalization
 
-<button class="lang-toggle" @onclick="ToggleAsync" title="@L["Shell_SwitchLanguage"]" aria-label="@L["Shell_SwitchLanguage"]">
+<button class="grid h-[30px] cursor-pointer place-items-center rounded-[7px] border border-border bg-surface px-2.5 text-[0.72rem] font-bold tracking-[0.04em] text-muted transition hover:bg-surface-2 hover:text-text-2"
+        @onclick="ToggleAsync" title="@L["Shell_SwitchLanguage"]" aria-label="@L["Shell_SwitchLanguage"]">
     @(IsPolish ? "EN" : "PL")
 </button>
 

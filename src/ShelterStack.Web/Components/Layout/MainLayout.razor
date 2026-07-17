@@ -9,25 +9,25 @@
    rendered. The sign-in page deliberately uses the chromeless EmptyLayout, so it is exempt. *@
 @if (_authenticated)
 {
-<div class="app">
+<div class="grid min-h-screen grid-cols-1 min-[861px]:grid-cols-[244px_1fr]">
     <NavMenu />
 
-    <div class="main">
-        <header class="topbar">
-            <div class="crumbs">
-                <b>@CurrentPageTitle</b>
+    <div class="flex min-w-0 flex-col">
+        <header class="sticky top-0 z-20 flex h-[60px] items-center gap-4 border-b border-border bg-[rgba(255,255,255,0.82)] px-6 backdrop-blur-[10px]">
+            <div class="flex items-center gap-2 text-[0.86rem] text-muted">
+                <b class="font-semibold text-text">@CurrentPageTitle</b>
             </div>
-            <div class="search">
+            <div class="ml-auto flex w-[280px] items-center gap-2 rounded-full border border-border bg-surface-2 px-3.5 py-[7px] text-muted max-[860px]:hidden">
                 <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="7" /><path d="m21 21-4.3-4.3" /></svg>
-                <input placeholder="@L["Shell_SearchPlaceholder"]" disabled />
+                <input class="w-full border-none bg-transparent text-[0.86rem] text-text outline-none" placeholder="@L["Shell_SearchPlaceholder"]" disabled />
             </div>
-            <button class="icon-btn" disabled aria-label="Notifications">
+            <button class="grid h-9 w-9 place-items-center rounded-[9px] border border-border bg-surface text-text-2 transition hover:bg-surface-2" disabled aria-label="Notifications">
                 <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 1 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" /><path d="M13.7 21a2 2 0 0 1-3.4 0" /></svg>
             </button>
             <LanguageToggle />
         </header>
 
-        <main class="content">
+        <main class="mx-auto w-full max-w-[1280px] px-8 pt-7 pb-20">
             @Body
         </main>
     </div>

@@ -8,37 +8,37 @@
 
 <PageTitle>@L["Login_PageTitle"]</PageTitle>
 
-<div class="auth">
-    <aside class="auth-aside">
-        <span class="brand">
-            <span class="brand-mark">
+<div class="grid min-h-screen grid-cols-1 min-[861px]:grid-cols-2">
+    <aside class="flex flex-col bg-[linear-gradient(160deg,#0f7a55,#0c2a22)] p-14 text-white max-[860px]:hidden">
+        <span class="flex items-center gap-2.5 text-white">
+            <span class="grid h-8 w-8 place-items-center rounded-[9px] bg-[linear-gradient(150deg,var(--color-primary),var(--color-primary-700))] text-white">
                 <svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 11.5 12 4l9 7.5" /><path d="M5 10v9a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-9" /><path d="M9.5 21v-5a2.5 2.5 0 0 1 5 0v5" /></svg>
             </span>
-            <span class="brand-name">ShelterStack<small>@L["Login_StaffWorkspace"]</small></span>
+            <span class="text-base font-bold tracking-[-0.02em]">ShelterStack<small class="block text-[0.66rem] font-medium tracking-[0.05em] text-white/60">@L["Login_StaffWorkspace"]</small></span>
         </span>
 
-        <div class="auth-aside-body">
-            <h2>@L["Login_SideHeading"]</h2>
-            <p>@L["Login_SideBody"]</p>
-            <ul class="auth-points">
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_IsolatedData"]</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_Roles"]</li>
-                <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_OpenSource"]</li>
+        <div class="my-auto">
+            <h2 class="max-w-[420px] text-[2rem] font-bold leading-[1.15]">@L["Login_SideHeading"]</h2>
+            <p class="mt-4 max-w-[400px] text-[1.02rem] text-white/[0.78]">@L["Login_SideBody"]</p>
+            <ul class="mt-8 flex list-none flex-col gap-3 p-0 [&>li>svg]:h-[18px] [&>li>svg]:w-[18px] [&>li>svg]:text-[#5fd0a8]">
+                <li class="flex items-center gap-[11px] text-[0.92rem] text-white/90"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_IsolatedData"]</li>
+                <li class="flex items-center gap-[11px] text-[0.92rem] text-white/90"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_Roles"]</li>
+                <li class="flex items-center gap-[11px] text-[0.92rem] text-white/90"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5" /></svg> @L["Login_Point_OpenSource"]</li>
             </ul>
         </div>
 
-        <p class="auth-foot">ShelterStack · AGPL-3.0</p>
+        <p class="text-[0.8rem] text-white/[0.55]">ShelterStack · AGPL-3.0</p>
     </aside>
 
-    <main class="auth-main">
-        <EditForm class="auth-form" Model="_model" OnValidSubmit="SignInAsync">
+    <main class="grid place-items-center p-10">
+        <EditForm class="w-full max-w-[360px]" Model="_model" OnValidSubmit="SignInAsync">
             <DataAnnotationsValidator />
 
-            <div class="auth-form-header">
-                <h1>@L["Login_Heading"]</h1>
+            <div class="mb-0.5 flex items-center justify-between">
+                <h1 class="text-2xl font-bold">@L["Login_Heading"]</h1>
                 <LanguageToggle />
             </div>
-            <p class="sub">@L["Login_SubHeading"]</p>
+            <p class="mt-1.5 mb-7 text-[0.92rem] text-muted">@L["Login_SubHeading"]</p>
 
             @if (_error is not null)
             {
@@ -59,9 +59,9 @@
                 @(_busy ? L["Login_SubmitBusy"].Value : L["Login_Submit"].Value)
             </button>
 
-            <p class="hint" style="margin-top:16px;text-align:center">
-                Demo accounts: <span class="mono">admin@northside.example</span> ·
-                <span class="mono">staff@riverside.example</span> — password <span class="mono">Demo123!</span>
+            <p class="mt-4 text-center text-[0.74rem] text-muted">
+                Demo accounts: <span class="font-mono text-[0.82rem]">admin@northside.example</span> ·
+                <span class="font-mono text-[0.82rem]">staff@riverside.example</span> — password <span class="font-mono text-[0.82rem]">Demo123!</span>
             </p>
         </EditForm>
     </main>
