@@ -46,6 +46,12 @@ constraints, and licensing rationale live in the project charter
   project and startup project are the same service, e.g.:
   `dotnet ef migrations add <Name> -p src/ShelterStack.Identity.Api -s src/ShelterStack.Identity.Api`
   then `dotnet ef database update -p ... -s ...`.
+- NuGet versions are managed centrally (`Directory.Packages.props`): a `.csproj`
+  carries `<PackageReference Include="X" />` with **no** `Version` attribute, and
+  the version lives in a `<PackageVersion>` there. Adding a package means an entry
+  in both. Keep one version per package across the solution — the EF Core entries
+  in particular must move in lockstep, since the Npgsql provider depends on EF as
+  a range and a split reintroduces the MSB3277 conflicts of #107.
 
 ## Non-negotiable architectural rule: tenant isolation
 

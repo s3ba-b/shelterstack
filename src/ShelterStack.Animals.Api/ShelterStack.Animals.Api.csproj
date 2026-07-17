@@ -15,12 +15,20 @@
       leak into a reused context from a later request. AddDbContext below is unpooled,
       so EF Core resolves ITenantContext from the correct per-request scope every time.
     -->
-    <PackageReference Include="Aspire.Npgsql" Version="13.4.6" />
-    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" Version="10.0.3" />
+    <PackageReference Include="Aspire.Npgsql" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <!--
+      Referenced explicitly, though the Npgsql provider already brings them in transitively:
+      the provider's EF dependency is a range whose floor (10.0.4) is older than the version
+      the test projects resolve, which produced the MSB3277 conflicts of #107. See the EF Core
+      group in Directory.Packages.props.
+    -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
     <!-- Validates the JWT bearer tokens issued by ShelterStack.Identity.Api against the shared signing key. -->
-    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
-    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Design" Version="10.0.10">
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
