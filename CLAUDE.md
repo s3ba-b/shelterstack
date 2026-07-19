@@ -121,8 +121,9 @@ not a convention to apply silently.
 ## Project website
 
 `docs/` is the GitHub Pages source for the public landing page (served from
-`main` at https://s3ba-b.github.io/shelterstack/) — it is not a general docs
-folder, don't repurpose it. It's a hand-written static page (no build step).
+`main` at https://shelterstack.org/ — the custom domain lives in `docs/CNAME`;
+the old s3ba-b.github.io/shelterstack URL 301-redirects) — it is not a general
+docs folder, don't repurpose it. It's a hand-written static page (no build step).
 The roadmap section's "Done"/"In progress" markers and the hero badge are
 populated live via a client-side fetch against the repo's GitHub milestones
 API (now public, so no auth needed) — see the script in `docs/index.html`
