@@ -41,6 +41,7 @@ system's requirements.
 | Shelter / rescue organizations | Human, direct | Tenants and data **controllers**; require strict isolation of their data. |
 | Operator (whoever hosts a shared instance) | Human, direct | Data **processor**; carries the GDPR/operational obligations in [PRIVACY.md](PRIVACY.md). |
 | Adoption applicants, fosters, volunteers | Human, indirect | Data subjects whose personal data is processed; their rights drive concrete features. |
+| Gminy (municipalities financing statutory shelter care) | Human, indirect | Fund and oversee statutory stray-animal care; their accountability and reporting needs (flagged by the Dec 2024 NIK audit) shape post-v1 reporting features (see [ROADMAP.md](ROADMAP.md), M8 candidate). |
 | Destination tenant (M7 transfer recipient) | Human, indirect | Another shelter/rescue that must give explicit consent before receiving a transferred animal record and its associated data. |
 | Project author / contributors | Human, direct | Build and maintain the platform; bound by the AGPL/DCO. |
 | GDPR / RODO regulation | Inanimate, indirect | Imposes data-protection requirements (see [PRIVACY.md](PRIVACY.md)). |
