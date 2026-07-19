@@ -129,6 +129,13 @@ a:focus-visible {
   max-width: 720px;
 }
 
+.lead a {
+  color: var(--accent);
+  text-decoration: underline;
+}
+
+.lead a:hover { text-decoration: none; }
+
 .grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));

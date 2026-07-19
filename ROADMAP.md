@@ -48,13 +48,14 @@ it, not separately shipped releases.
 ## Post-v1 extensions
 
 Beyond the original 6-month M0–M6 arc (see the charter's [Constraints](CHARTER.md#constraints)),
-one further milestone is planned. Unlike M0–M6 it deliberately extends the project's scope —
-see the charter's Constraints and Risks for why this is a conscious, narrow exception rather
-than scope creep.
+one further milestone is planned (M7), and one is named as the leading **candidate** after it
+(M8). Unlike M0–M6 they deliberately extend the project's scope — see the charter's Constraints
+and Risks for why this is a conscious, narrow exception rather than scope creep.
 
 | Milestone | Definition of done |
 |---|---|
-| **M7 — Cross-tenant federation & transfers** | A shelter can propose, and a destination shelter can accept, a controlled transfer of an animal record (with its intake and medical history) to another tenant. The transfer only proceeds after **explicit, mutual consent** from both tenants; a **negative-path isolation test** proves that without that consent, no data crosses the tenant boundary. The full transfer (proposal, consent, migration) is recorded in the audit log introduced in M5. Optionally extends to shared visibility of available foster capacity across consenting tenants. |
+| **M7 — Cross-tenant federation & transfers** | A shelter can propose, and a destination shelter can accept, a controlled transfer of an animal record (with its intake and medical history) to another tenant. The transfer only proceeds after **explicit, mutual consent** from both tenants; a **negative-path isolation test** proves that without that consent, no data crosses the tenant boundary. The full transfer (proposal, consent, migration) is recorded in the audit log introduced in M5. Optionally extends to shared visibility of available foster capacity across consenting tenants — which doubles as disaster-time placement: the 2024 floods forced ad-hoc, Facebook-based animal evacuations between Polish shelters, and no existing tool covers it. |
+| **M8 — Gmina & statutory reporting (candidate)** | One-click generation of the statutory reports Polish shelters and gminy file (municipal stray-animal programs, GIW), plus a gmina-facing accountability view of every animal a gmina finances — current location, status, microchip — the exact gap the [December 2024 NIK audit](https://www.nik.gov.pl/aktualnosci/bezdomnosc-zwierzat.html) flagged. Leading candidate after M7 because gminy are the domain's payer: this is what unlocks municipal contracts. Not yet committed — confirm and break down after M7 lands. |
 
 ## Possible further directions
 
@@ -75,10 +76,7 @@ Revisit once M7 lands. The full analysis (market map, strategic gap, source link
   (export, anonymisation, audit log) as a visible "data subject rights panel" for tenant admins,
   plus a ready-made DPA template for operators. US competitors lack this; it is a concrete EU
   purchasing argument.
-- **Polish statutory reporting (GIW / gminy)** — one-click generation of the statutory reports
-  that Polish shelters submit to municipalities and the Veterinary Inspectorate (GIW); decisive
-  for winning municipal contracts.
-- **Public adoption portal (M8 candidate)** — a read-only, per-tenant adoption listing page
+- **Public adoption portal** — a read-only, per-tenant adoption listing page
   (static or separately served). Deliberately excluded from v1; the single biggest gap vs.
   eSCHRONISKO/PetNest for small foundations.
 
@@ -97,13 +95,10 @@ This is the same process used to break down M0 into its initial five issues.
 
 Payment processing, public-facing adopter portals, and mobile apps are explicitly out of scope. The internal **staff-facing web UI is now in scope (M3)** — it is distinct from the excluded public-facing adopter portal. See the project charter's constraints ([CHARTER.md](CHARTER.md)) for the full list and rationale.
 
-**Animal-type coverage (open V1 scope decision).** The animal model ships a fixed
-species set — dog, cat, rabbit, bird, and an "Other" catch-all — and no free-text
-field to record what "Other" actually is. Different **organisations** are fully
-supported (multi-tenancy, isolation-tested since M0–M2), but shelters whose primary
-animals fall outside that set (equine, farm/livestock, reptile/exotic, wildlife
-rehab) can only file them under "Other", with no first-class species label to filter
-or report on. Whether V1 stays companion-animal-focused, adds a free-text species, or
-makes species per-tenant configurable is tracked in
-[issue #132](https://github.com/s3ba-b/shelterstack/issues/132). Left unresolved, V1
-functionally targets companion-animal shelters.
+**Animal-type coverage (decided).** V1 stays companion-animal-focused — the
+fixed species set (dog, cat, rabbit, bird, "Other") matches where the problem
+actually is (per the Dec 2024 NIK audit, dogs and cats dominate Polish shelters) —
+but "Other" gains an optional free-text species detail so equine/farm/exotic/wildlife
+cases can at least be recorded accurately. Implementation is tracked in
+[issue #132](https://github.com/s3ba-b/shelterstack/issues/132) (M6); a per-tenant
+species catalog stays deferred.

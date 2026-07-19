@@ -13,6 +13,7 @@ window.OS_I18N = {
 
     "why.h2": "Why this exists",
     "why.lead": "Most small shelters and rescues get by on spreadsheets and a patchwork of free tools, because the professional shelter software costs more than their budget allows. ShelterStack gives them a proper system for free — one they can run themselves, and that's licensed so it can never be locked away and turned into yet another paid product they can't access.",
+    "why.lead2": "The need is well documented: in 2024 Poland's national audit office <a href=\"https://www.nik.gov.pl/aktualnosci/bezdomnosc-zwierzat.html\" target=\"_blank\" rel=\"noopener\">found</a> that most inspected shelters fell short of required standards, and that the local governments paying for stray-animal care often couldn't reliably track the animals they fund — while roughly 950,000 dogs and cats in Poland have no home. Keeping clear, up-to-date records is exactly the gap software like this closes.",
 
     "features.h2": "What it does",
     "card1.t": "Private to each shelter",
@@ -64,6 +65,8 @@ window.OS_I18N = {
     "beyond.c1.d": "When one shelter passes an animal to another, its whole story — where it came from and its vet care — could travel with it, but only when both shelters explicitly agree. Tools that keep every shelter walled off have no reason to build this.",
     "beyond.c2.t": "Built for European privacy rules (GDPR)",
     "beyond.c2.d": "Exporting a person's data, erasing it on request, and keeping a clear record of what was done — offered as everyday features for shelter admins, not compliance paperwork bolted on later. Software built outside the EU usually skips this.",
+    "beyond.c3.t": "Reports for municipalities",
+    "beyond.c3.d": "Shelters answer to the local governments that fund them, and Poland's 2024 state audit showed how often that oversight breaks down. One-click reports — which animals a municipality finances, where they are, whether they're chipped — would turn that duty from paperwork into a button.",
     "roadmap.m0.t": "M0 — Walking skeleton",
     "roadmap.m0.d": "The foundations: the system runs end to end, and the data-privacy safeguard is proven by an automated test. ",
     "roadmap.status.done": "Done.",
@@ -114,6 +117,7 @@ window.OS_I18N = {
 
     "why.h2": "Po co to powstało",
     "why.lead": "Większość małych schronisk i organizacji radzi sobie za pomocą arkuszy kalkulacyjnych i zlepku darmowych narzędzi, bo profesjonalne oprogramowanie dla schronisk kosztuje więcej, niż pozwala ich budżet. ShelterStack daje im porządny system za darmo — taki, który mogą uruchomić samodzielnie i który jest licencjonowany tak, by nigdy nie dało się go zamknąć i zamienić w kolejny płatny produkt poza ich zasięgiem.",
+    "why.lead2": "Potrzeba jest dobrze udokumentowana: w 2024 r. Najwyższa Izba Kontroli <a href=\"https://www.nik.gov.pl/aktualnosci/bezdomnosc-zwierzat.html\" target=\"_blank\" rel=\"noopener\">wykazała</a>, że większość skontrolowanych schronisk nie spełniała wymaganych standardów, a gminy płacące za opiekę nad bezdomnymi zwierzętami często nie były w stanie rzetelnie śledzić losów zwierząt, które finansują — podczas gdy około 950 tysięcy psów i kotów w Polsce nie ma domu. Prowadzenie przejrzystej, aktualnej ewidencji to dokładnie ta luka, którą takie oprogramowanie wypełnia.",
 
     "features.h2": "Co potrafi",
     "card1.t": "Prywatne dla każdego schroniska",
@@ -165,6 +169,8 @@ window.OS_I18N = {
     "beyond.c1.d": "Gdy jedno schronisko przekazuje zwierzę do innego, jego cała historia — skąd trafiło i jego opieka weterynaryjna — mogłaby powędrować razem z nim, ale tylko za wyraźną zgodą obu schronisk. Programy, które trzymają każde schronisko osobno, nie mają powodu tego budować.",
     "beyond.c2.t": "Zbudowane pod europejskie przepisy (RODO)",
     "beyond.c2.d": "Wyeksportowanie danych osoby, usunięcie ich na żądanie i przejrzysty zapis tego, co zrobiono — udostępniane jako zwykłe funkcje dla administratorów schroniska, a nie doklejona później papierologia. Oprogramowanie tworzone poza UE zwykle to pomija.",
+    "beyond.c3.t": "Raporty dla gmin",
+    "beyond.c3.d": "Schroniska rozliczają się przed gminami, które je finansują, a kontrola NIK z 2024 r. pokazała, jak często ten nadzór zawodzi. Raporty jednym kliknięciem — które zwierzęta gmina finansuje, gdzie przebywają, czy są zaczipowane — zamieniłyby ten obowiązek z papierologii w przycisk.",
     "roadmap.m0.t": "M0 — Działający szkielet",
     "roadmap.m0.d": "Fundamenty: system działa od początku do końca, a zabezpieczenie prywatności danych jest potwierdzone automatycznym testem. ",
     "roadmap.status.done": "Zakończono.",
