@@ -28,7 +28,7 @@
 
   <ItemGroup Label="ASP.NET Core and auth">
     <PackageVersion Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="10.0.10" />
-    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.19.2" />
+    <PackageVersion Include="System.IdentityModel.Tokens.Jwt" Version="8.21.0" />
   </ItemGroup>
 
   <ItemGroup Label="Gateway and service discovery">
