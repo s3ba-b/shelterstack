@@ -18,7 +18,8 @@ constraints, and licensing rationale live in the project charter
   orchestration entry point, `src/ShelterStack.ServiceDefaults` carries shared
   OpenTelemetry/health/resilience wiring used by every service.
 - PostgreSQL, Redis, and a message broker (RabbitMQ / Azure Service Bus) as
-  Aspire-orchestrated backing resources (added as services land).
+  Aspire-orchestrated backing resources. RabbitMQ now carries real traffic — see
+  the integration-events note below.
 - A staff-facing frontend is in scope: a Blazor web app (`src/ShelterStack.Web`,
   .NET 10, Aspire-orchestrated). Don't treat the frontend as out of scope — only
   the public-facing adopter portal and mobile apps remain excluded.
@@ -112,6 +113,33 @@ Match the existing code:
   pattern is genuinely reused across pages or is selected in C# (as the status
   badges are); one-off page layout stays inline. Do **not** add scoped
   `.razor.css` files — Tailwind is the only styling system.
+
+## Integration events (service-to-service)
+
+Services talk over the Aspire `messaging` (RabbitMQ) resource using the raw
+`RabbitMQ.Client` via `Aspire.RabbitMQ.Client` — there is no MassTransit or
+NServiceBus, and adding one is an architectural decision, not a convention.
+Established by M4's adoption flow (`Adoptions.Api` publishes `AdoptionApproved`,
+`Animals.Api` consumes it and publishes `AnimalStatusChangeRejected` back):
+
+- One durable topic exchange `shelterstack.events`, one durable queue per
+  consuming service (`<service>.<event>`), each dead-lettering to
+  `shelterstack.events.dead-letter`. A message a consumer can't handle is
+  dead-lettered, never requeued in a loop.
+- **Event contracts are duplicated per service**, not extracted to a shared
+  assembly — same convention as `ITenantContext`, `TokenAuth`, and `DemoTenants`.
+  The binding contract is the JSON on the wire. Keep both copies in step.
+- **Events carry `TenantId` in the body, and the consumer must push it through
+  the normal `ITenantContext`** (a `StaticTenantContext` built from the message)
+  so the same global query filters apply. A tenant id from a message is never a
+  trusted claim — the broker must not become a route across the tenant boundary
+  that HTTP isn't (see #106). Every new event needs a cross-tenant isolation test
+  covering the broker path.
+- A cross-service write is asynchronous, so the HTTP call has already returned by
+  the time it can fail. Anything that can be refused downstream needs a
+  **compensating event** and a visible state for staff (as `NeedsAttention` is),
+  not just a log line. A synchronous pre-check is a nicety for the common case;
+  the compensating path is the correctness guarantee.
 
 Don't introduce Mediator/CQRS, FluentValidation, a `Result<T>` flow-control
 pattern, Scalar, or FluentAssertions on a whim — none are in use today, so

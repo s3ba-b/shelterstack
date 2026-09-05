@@ -3,27 +3,47 @@ var builder = DistributedApplication.CreateBuilder(args);
 var postgres = builder.AddPostgres("postgres").WithDataVolume();
 var shelterStackDb = postgres.AddDatabase("shelterstackdb");
 var identityDb = postgres.AddDatabase("identitydb");
+var adoptionsDb = postgres.AddDatabase("adoptionsdb");
 
 var redis = builder.AddRedis("redis").WithDataVolume();
 
 var messaging = builder.AddRabbitMQ("messaging").WithDataVolume();
 
+// Consumes AdoptionApproved from adoptions-api over the broker and publishes
+// AnimalStatusChangeRejected back when it cannot apply the move — the first service-to-service
+// integration in the codebase.
 var animalsApi = builder
     .AddProject<Projects.ShelterStack_Animals_Api>("animals-api")
     .WithReference(shelterStackDb)
-    .WaitFor(shelterStackDb);
+    .WaitFor(shelterStackDb)
+    .WithReference(messaging)
+    .WaitFor(messaging);
 
 var identityApi = builder
     .AddProject<Projects.ShelterStack_Identity_Api>("identity-api")
     .WithReference(identityDb)
     .WaitFor(identityDb);
 
+// Adoption applications (M4). Owns its own adoptionsdb and references animals by id only; it
+// pre-checks an animal's status over HTTP before approving, then hands the actual transition to
+// animals-api over the broker.
+var adoptionsApi = builder
+    .AddProject<Projects.ShelterStack_Adoptions_Api>("adoptions-api")
+    .WithReference(adoptionsDb)
+    .WaitFor(adoptionsDb)
+    .WithReference(messaging)
+    .WaitFor(messaging)
+    .WithReference(animalsApi)
+    .WaitFor(animalsApi);
+
 var gateway = builder
     .AddProject<Projects.ShelterStack_Gateway>("gateway")
     .WithReference(animalsApi)
     .WaitFor(animalsApi)
     .WithReference(identityApi)
-    .WaitFor(identityApi);
+    .WaitFor(identityApi)
+    .WithReference(adoptionsApi)
+    .WaitFor(adoptionsApi);
 
 // Staff-facing Blazor web app. It talks to the backend only through the gateway
 // (never directly to a business service) and is the app's external HTTP endpoint.

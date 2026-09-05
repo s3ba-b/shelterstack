@@ -72,16 +72,17 @@ public sealed class CrossTenantIsolationTests : IAsyncLifetime
         using var client = _factory.CreateClient();
 
         var northsideAnimals = await GetAnimalsAsync(client, DemoTenants.Northside);
-        Assert.Single(northsideAnimals);
-        Assert.Equal("Buddy", northsideAnimals[0].Name);
+        Assert.Equal(DemoAnimals.PerTenant, northsideAnimals.Length);
+        Assert.Contains(northsideAnimals, a => a.Name == "Buddy");
+        Assert.DoesNotContain(northsideAnimals, a => a.Name == "Whiskers");
 
         // Same HttpClient/host as the Northside call above: a DbContext registered pooled
         // (AddDbContextPool) instead of scoped (AddDbContext) would hand this request the
-        // pooled instance still bound to Northside's tenant context, returning "Buddy"
-        // again instead of Riverside's own animal.
+        // pooled instance still bound to Northside's tenant context, returning Northside's
+        // animals again instead of Riverside's own.
         var riversideAnimals = await GetAnimalsAsync(client, DemoTenants.Riverside);
-        Assert.Single(riversideAnimals);
-        Assert.Equal("Whiskers", riversideAnimals[0].Name);
+        Assert.Equal(DemoAnimals.PerTenant, riversideAnimals.Length);
+        Assert.Contains(riversideAnimals, a => a.Name == "Whiskers");
         Assert.DoesNotContain(riversideAnimals, a => a.Name == "Buddy");
     }
 
@@ -141,7 +142,7 @@ public sealed class CrossTenantIsolationTests : IAsyncLifetime
         Assert.Equal("Male", northsideView.Sex);
         Assert.Equal(new DateOnly(2020, 1, 15), northsideView.DateOfBirth);
 
-        // It appears in Northside's list alongside the seeded Buddy.
+        // It appears in Northside's list alongside its seeded animals.
         var northsideList = await GetAnimalsAsync(client, DemoTenants.Northside);
         Assert.Contains(northsideList, a => a.Name == "Rex");
 
@@ -150,7 +151,7 @@ public sealed class CrossTenantIsolationTests : IAsyncLifetime
         using var riversideFetch = await GetAnimalAsync(client, DemoTenants.Riverside, created.Id);
         Assert.Equal(HttpStatusCode.NotFound, riversideFetch.StatusCode);
 
-        // ...and not in its list, which still holds only its own seeded Whiskers.
+        // ...and not in its list, which still holds only its own seeded animals.
         var riversideList = await GetAnimalsAsync(client, DemoTenants.Riverside);
         Assert.DoesNotContain(riversideList, a => a.Name == "Rex");
         Assert.Contains(riversideList, a => a.Name == "Whiskers");

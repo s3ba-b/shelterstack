@@ -1,5 +1,6 @@
 <Solution>
   <Folder Name="/src/">
+    <Project Path="src/ShelterStack.Adoptions.Api/ShelterStack.Adoptions.Api.csproj" />
     <Project Path="src/ShelterStack.Animals.Api/ShelterStack.Animals.Api.csproj" />
     <Project Path="src/ShelterStack.AppHost/ShelterStack.AppHost.csproj" />
     <Project Path="src/ShelterStack.Gateway/ShelterStack.Gateway.csproj" />
@@ -8,6 +9,7 @@
     <Project Path="src/ShelterStack.Web/ShelterStack.Web.csproj" />
   </Folder>
   <Folder Name="/tests/">
+    <Project Path="tests/ShelterStack.Adoptions.Api.Tests/ShelterStack.Adoptions.Api.Tests.csproj" />
     <Project Path="tests/ShelterStack.Animals.Api.Tests/ShelterStack.Animals.Api.Tests.csproj" />
     <Project Path="tests/ShelterStack.Identity.Api.IntegrationTests/ShelterStack.Identity.Api.IntegrationTests.csproj" />
     <Project Path="tests/ShelterStack.Identity.Api.IsolationTests/ShelterStack.Identity.Api.IsolationTests.csproj" />

@@ -19,6 +19,13 @@
     <!-- Mints the JWT bearer tokens the tests authenticate with, signed with the host's key. -->
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
     <PackageReference Include="Testcontainers.PostgreSql" />
+    <!--
+      The adoption flow's broker leg is exercised over a real RabbitMQ, not a stubbed publisher:
+      the acceptance criterion this suite gates is that an event bearing another tenant's id
+      cannot mutate that tenant's animal, and an in-process fake would prove nothing about what
+      the consumers actually do with a message that arrives off the wire.
+    -->
+    <PackageReference Include="Testcontainers.RabbitMq" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" />
     <PackageReference Include="xunit" />
     <PackageReference Include="xunit.runner.visualstudio" />
@@ -35,6 +42,15 @@
     <ProjectReference
       Include="..\..\src\ShelterStack.Identity.Api\ShelterStack.Identity.Api.csproj"
       Aliases="identity"
+    />
+    <!--
+      The adoption isolation tests boot this host alongside the Animals one and drive the real
+      approve → AdoptionApproved → AnimalStatusChangeRejected round trip between them. Aliased
+      for the same reason as Identity: all three API assemblies expose a global Program type.
+    -->
+    <ProjectReference
+      Include="..\..\src\ShelterStack.Adoptions.Api\ShelterStack.Adoptions.Api.csproj"
+      Aliases="adoptions"
     />
   </ItemGroup>
 </Project>

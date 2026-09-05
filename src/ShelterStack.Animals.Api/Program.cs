@@ -7,6 +7,7 @@ using Npgsql;
 using ShelterStack.Animals.Api;
 using ShelterStack.Animals.Api.Auth;
 using ShelterStack.Animals.Api.Data;
+using ShelterStack.Animals.Api.Messaging;
 using ShelterStack.Animals.Api.Tenancy;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -75,6 +76,15 @@ builder.Services.AddAuthorization(options =>
 // M0 X-Tenant-Id header). The ITenantContext contract and every query filter built on it are
 // unchanged — only the source of the tenant id moved.
 builder.Services.AddScoped<ITenantContext, ClaimsTenantContext>();
+
+// The broker leg of the adoption flow. AddRabbitMQClient resolves the Aspire "messaging"
+// resource and registers the IConnection; AdoptionApprovedConsumer subscribes in the background
+// and retries rather than failing startup, so this host still boots and serves HTTP when no
+// broker is configured (as in the API-level tests).
+builder.AddRabbitMQClient("messaging");
+builder.Services.AddSingleton<EventPublisher>();
+builder.Services.AddScoped<AdoptionApprovedHandler>();
+builder.Services.AddHostedService<AdoptionApprovedConsumer>();
 
 var app = builder.Build();
 
@@ -333,32 +343,9 @@ static async Task SeedDemoTenantsAsync(IServiceProvider services)
         return;
     }
 
-    db.Animals.AddRange(
-        new Animal
-        {
-            Id = Guid.NewGuid(),
-            TenantId = DemoTenants.Northside,
-            Name = "Buddy",
-            Species = AnimalSpecies.Dog,
-            Breed = "Labrador Retriever",
-            Sex = AnimalSex.Male,
-            DateOfBirth = new DateOnly(2021, 4, 12),
-            Description = "Friendly, house-trained; good with children.",
-            Status = AnimalStatus.Available,
-        },
-        new Animal
-        {
-            Id = Guid.NewGuid(),
-            TenantId = DemoTenants.Riverside,
-            Name = "Whiskers",
-            Species = AnimalSpecies.Cat,
-            Breed = "Domestic Shorthair",
-            Sex = AnimalSex.Female,
-            DateOfBirth = new DateOnly(2022, 9, 1),
-            Description = "Shy at first; prefers a quiet home.",
-            Status = AnimalStatus.Available,
-        }
-    );
+    // Ids are deterministic, not freshly generated: ShelterStack.Adoptions.Api seeds its demo
+    // applications against these same animal ids from its own database. See DemoAnimals.
+    db.Animals.AddRange(DemoAnimals.All());
 
     await db.SaveChangesAsync();
 }

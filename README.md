@@ -44,9 +44,9 @@ See the [project charter](CHARTER.md) for the full objectives, scope, and constr
 ### Run locally
 
 ```bash
-# Starts the backing resources (PostgreSQL, Redis, RabbitMQ) plus the
-# animals-api and gateway services. More business services land in later
-# milestones.
+# Starts the backing resources (PostgreSQL, Redis, RabbitMQ), the services
+# (identity, animals, adoptions, gateway) and the staff web app. More business
+# services land in later milestones.
 aspire run
 ```
 
