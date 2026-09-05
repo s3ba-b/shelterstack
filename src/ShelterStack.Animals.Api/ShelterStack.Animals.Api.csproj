@@ -25,6 +25,13 @@
     -->
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <!--
+      The broker leg of the adoption flow: this service consumes AdoptionApproved from
+      ShelterStack.Adoptions.Api and publishes AnimalStatusChangeRejected back when it cannot
+      apply the move. Aspire.RabbitMQ.Client resolves the "messaging" resource and registers the
+      IConnection plus its health check.
+    -->
+    <PackageReference Include="Aspire.RabbitMQ.Client" />
     <!-- Validates the JWT bearer tokens issued by ShelterStack.Identity.Api against the shared signing key. -->
     <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
     <PackageReference Include="System.IdentityModel.Tokens.Jwt" />

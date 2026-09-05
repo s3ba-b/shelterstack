@@ -1,0 +1,39 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <!--
+      Same data-access shape as ShelterStack.Animals.Api: Aspire.Npgsql for connection-string
+      resolution + health checks over the "adoptionsdb" resource, and the raw Npgsql EF provider
+      rather than the Aspire.Npgsql.EntityFrameworkCore.PostgreSQL wrapper, whose AddNpgsqlDbContext
+      always pools contexts — and a pooled context holding a constructor-injected scoped
+      ITenantContext would let one request's tenant leak into a later request's reused instance.
+    -->
+    <PackageReference Include="Aspire.Npgsql" />
+    <PackageReference Include="Npgsql.EntityFrameworkCore.PostgreSQL" />
+    <!-- Referenced explicitly to keep the whole graph on one EF version — see Directory.Packages.props. -->
+    <PackageReference Include="Microsoft.EntityFrameworkCore" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" />
+    <!--
+      The broker leg of the adoption flow: approving publishes AdoptionApproved and this service
+      consumes AnimalStatusChangeRejected back from ShelterStack.Animals.Api. Aspire.RabbitMQ.Client
+      resolves the "messaging" resource and registers the IConnection plus its health check.
+    -->
+    <PackageReference Include="Aspire.RabbitMQ.Client" />
+    <!-- Validates the JWT bearer tokens issued by ShelterStack.Identity.Api against the shared signing key. -->
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Design">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\ShelterStack.ServiceDefaults\ShelterStack.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>

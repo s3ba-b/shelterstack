@@ -3,6 +3,7 @@ using System.Net.Http.Headers;
 using System.Net.Http.Json;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc.Testing;
+using ShelterStack.Animals.Api.Data;
 using Testcontainers.PostgreSql;
 using Xunit;
 using IdentityProgram = identity::Program;
@@ -80,16 +81,17 @@ public sealed class AuthPipelineCrossTenantIsolationTests : IAsyncLifetime
         // Real token from the real login endpoint — not a hand-crafted JWT.
         var northsideToken = await LoginAsync(identityClient, "admin@northside.example");
         var northsideAnimals = await GetAnimalsAsync(animalsClient, northsideToken);
-        Assert.Single(northsideAnimals);
-        Assert.Equal("Buddy", northsideAnimals[0].Name);
+        Assert.Equal(DemoAnimals.PerTenant, northsideAnimals.Length);
+        Assert.Contains(northsideAnimals, a => a.Name == "Buddy");
+        Assert.DoesNotContain(northsideAnimals, a => a.Name == "Whiskers");
 
         // A token genuinely issued for Riverside must never surface Northside's "Buddy", and vice
         // versa — the cross-tenant leak this whole suite exists to catch, here proven end to end
         // (Identity login → JWT → Animals request) rather than at the data layer.
         var riversideToken = await LoginAsync(identityClient, "admin@riverside.example");
         var riversideAnimals = await GetAnimalsAsync(animalsClient, riversideToken);
-        Assert.Single(riversideAnimals);
-        Assert.Equal("Whiskers", riversideAnimals[0].Name);
+        Assert.Equal(DemoAnimals.PerTenant, riversideAnimals.Length);
+        Assert.Contains(riversideAnimals, a => a.Name == "Whiskers");
         Assert.DoesNotContain(riversideAnimals, a => a.Name == "Buddy");
     }
 
